@@ -27,6 +27,7 @@ import AdminStats from "./pages/admin/Stats";
 import AdminTestimonials from "./pages/admin/Testimonials";
 import AdminConfig from "./pages/admin/Config";
 import AdminTranslations from "./pages/admin/Translations";
+import Portfolio from "./pages/Portfolio";
 import { CaseStudy } from "@/components/CaseStudy";
 import { PerformanceObserver } from "@/components/PerformanceObserver";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
@@ -64,8 +65,9 @@ const App = () => {
             <Route path="/case-study/:id" element={<CaseStudy />} />
             
             {/* Auth Routes */}
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/u/:username" element={<Portfolio />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
             
             {/* Protected Admin Routes */}
             <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />

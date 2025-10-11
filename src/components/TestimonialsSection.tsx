@@ -1,115 +1,44 @@
 import { GlassPanel } from "./GlassPanel";
 import { Badge } from "@/components/ui/badge";
 import { Star, Quote } from "lucide-react";
-
-interface Testimonial {
-  id: string;
-  name: string;
-  role: string;
-  company: string;
-  avatar: string;
-  content: string;
-  rating: number;
-  project?: string;
-}
-
-interface Metric {
-  id: string;
-  label: string;
-  value: string;
-  description: string;
-  growth?: string;
-}
-
-const testimonials: Testimonial[] = [
-  {
-    id: "sarah-chen",
-    name: "Sarah Chen",
-    role: "Startup Founder",
-    company: "TechFlow Solutions",
-    avatar: "/api/placeholder/64/64",
-    content: "Mohamed transformed our MVP from a basic prototype into a polished, lightning-fast web application. His attention to performance optimization increased our user engagement by 40%.",
-    rating: 5,
-    project: "MVP Development"
-  },
-  {
-    id: "ahmad-hassan",
-    name: "Ahmad Hassan",
-    role: "Marketing Director",
-    company: "Digital Dynamics",
-    avatar: "/api/placeholder/64/64",
-    content: "Working with Mohamed on our content strategy was game-changing. His Instagram reels not only went viral but actually converted into quality leads for our business.",
-    rating: 5,
-    project: "Content Creation"
-  },
-  {
-    id: "fatima-al-zahra",
-    name: "Fatima Al-Zahra",
-    role: "International Student",
-    company: "Istanbul University",
-    avatar: "/api/placeholder/64/64",
-    content: "Thanks to Qobouli and Mohamed's guidance, I found the perfect university program in Turkey that matched my budget and career goals. The application process was smooth and transparent.",
-    rating: 5,
-    project: "Qobouli Services"
-  },
-  {
-    id: "david-kim",
-    name: "David Kim",
-    role: "E-commerce Manager",
-    company: "Global Retail Co",
-    avatar: "/api/placeholder/64/64",
-    content: "The e-commerce platform Mohamed built for us handles 10K+ orders monthly without any hiccups. His code quality and documentation made future updates seamless.",
-    rating: 5,
-    project: "E-commerce Platform"
-  }
-];
-
-const metrics: Metric[] = [
-  {
-    id: "client-satisfaction",
-    label: "Client Satisfaction",
-    value: "100%",
-    description: "All clients report being highly satisfied with delivered projects",
-    growth: "+5% from last year"
-  },
-  {
-    id: "project-delivery",
-    label: "On-Time Delivery",
-    value: "98%",
-    description: "Projects delivered on or before the agreed deadline",
-    growth: "Consistent record"
-  },
-  {
-    id: "performance-boost",
-    label: "Average Performance Boost",
-    value: "65%",
-    description: "Average improvement in site speed after optimization",
-    growth: "+15% improvement"
-  },
-  {
-    id: "content-reach",
-    label: "Total Content Reach",
-    value: "500K+",
-    description: "Combined reach across all content creation projects",
-    growth: "+120% this year"
-  },
-  {
-    id: "student-placements",
-    label: "Student Placements",
-    value: "250+",
-    description: "International students successfully placed in Turkish universities",
-    growth: "+80% vs last year"
-  },
-  {
-    id: "repeat-clients",
-    label: "Repeat Clients",
-    value: "85%",
-    description: "Clients who return for additional projects or services",
-    growth: "Growing network"
-  }
-];
+import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
+import { useAuth } from "@/hooks/useAuth";
+import { useLocalizedContent } from "@/hooks/useLocalizedContent";
 
 export function TestimonialsSection() {
+  const { session } = useAuth();
+  const { localize } = useLocalizedContent();
+  
+  const { data: testimonials, isLoading: testimonialsLoading } = useQuery({
+    queryKey: ['testimonials', session?.user?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('testimonials')
+        .select('*')
+        .eq('user_id', session?.user?.id || '')
+        .order('display_order');
+      
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!session?.user?.id,
+  });
+
+  const { data: stats, isLoading: statsLoading } = useQuery({
+    queryKey: ['stats', session?.user?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('stats')
+        .select('*')
+        .eq('user_id', session?.user?.id || '')
+        .order('display_order');
+      
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!session?.user?.id,
+  });
   return (
     <section className="py-20 px-6 bg-gradient-to-b from-muted/10 to-background">
       <div className="max-w-7xl mx-auto">
@@ -126,71 +55,81 @@ export function TestimonialsSection() {
 
         {/* Success Metrics */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-16">
-          {metrics.map((metric) => (
-            <GlassPanel key={metric.id} className="p-4 text-center group hover:scale-105 transition-transform">
-              <div className="text-2xl md:text-3xl font-bold text-accent mb-1 group-hover:scale-110 transition-transform">
-                {metric.value}
-              </div>
-              <div className="text-xs md:text-sm font-medium mb-1">
-                {metric.label}
-              </div>
-              <div className="text-xs text-muted-foreground hidden md:block">
-                {metric.description}
-              </div>
-              {metric.growth && (
-                <div className="text-xs text-green-600 dark:text-green-400 mt-1">
-                  {metric.growth}
+          {statsLoading ? (
+            <div className="col-span-full text-center py-6">
+              <p className="text-muted-foreground">Loading stats...</p>
+            </div>
+          ) : stats && stats.length > 0 ? (
+            stats.map((stat) => (
+              <GlassPanel key={stat.id} className="p-4 text-center group hover:scale-105 transition-transform">
+                <div className="text-2xl md:text-3xl font-bold text-accent mb-1 group-hover:scale-110 transition-transform">
+                  {stat.value}
                 </div>
-              )}
-            </GlassPanel>
-          ))}
+                <div className="text-xs md:text-sm font-medium mb-1">
+                  {localize(stat, 'label')}
+                </div>
+                {stat.description_en && (
+                  <div className="text-xs text-muted-foreground hidden md:block">
+                    {localize(stat, 'description')}
+                  </div>
+                )}
+              </GlassPanel>
+            ))
+          ) : null}
         </div>
 
         {/* Testimonials Grid */}
         <div className="grid md:grid-cols-2 gap-8 mb-16">
-          {testimonials.map((testimonial) => (
-            <GlassPanel key={testimonial.id} interactive className="p-8 group">
-              {/* Rating */}
-              <div className="flex items-center gap-1 mb-4">
-                {Array.from({ length: testimonial.rating }).map((_, i) => (
-                  <Star key={i} className="w-4 h-4 fill-accent text-accent" />
-                ))}
-              </div>
-
-              {/* Quote */}
-              <div className="relative mb-6">
-                <Quote className="w-8 h-8 text-accent/20 absolute -top-2 -left-2" />
-                <p className="text-muted-foreground leading-relaxed italic pl-6">
-                  "{testimonial.content}"
-                </p>
-              </div>
-
-              {/* Client Info */}
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full overflow-hidden bg-muted">
-                  <img 
-                    src={testimonial.avatar} 
-                    alt={testimonial.name}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                  />
+          {testimonialsLoading ? (
+            <div className="col-span-2 text-center py-12">
+              <p className="text-muted-foreground">Loading testimonials...</p>
+            </div>
+          ) : testimonials && testimonials.length > 0 ? (
+            testimonials.map((testimonial) => (
+              <GlassPanel key={testimonial.id} interactive className="p-8 group">
+                {/* Rating */}
+                <div className="flex items-center gap-1 mb-4">
+                  {Array.from({ length: testimonial.rating || 5 }).map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-accent text-accent" />
+                  ))}
                 </div>
-                <div className="flex-1">
-                  <div className="font-semibold group-hover:text-accent transition-colors">
-                    {testimonial.name}
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    {testimonial.role} at {testimonial.company}
-                  </div>
-                  {testimonial.project && (
-                    <Badge variant="outline" className="mt-1 text-xs">
-                      {testimonial.project}
-                    </Badge>
-                  )}
+
+                {/* Quote */}
+                <div className="relative mb-6">
+                  <Quote className="w-8 h-8 text-accent/20 absolute -top-2 -left-2" />
+                  <p className="text-muted-foreground leading-relaxed italic pl-6">
+                    "{localize(testimonial, 'content')}"
+                  </p>
                 </div>
-              </div>
-            </GlassPanel>
-          ))}
+
+                {/* Client Info */}
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-full overflow-hidden bg-muted">
+                    <img 
+                      src={testimonial.avatar_url || '/api/placeholder/64/64'} 
+                      alt={testimonial.client_name}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <div className="font-semibold group-hover:text-accent transition-colors">
+                      {testimonial.client_name}
+                    </div>
+                    {testimonial.client_title_en && (
+                      <div className="text-sm text-muted-foreground">
+                        {localize(testimonial, 'client_title')}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </GlassPanel>
+            ))
+          ) : (
+            <div className="col-span-2 text-center py-12">
+              <p className="text-muted-foreground">No testimonials yet. Add some in the admin panel!</p>
+            </div>
+          )}
         </div>
 
         {/* Call to Action */}

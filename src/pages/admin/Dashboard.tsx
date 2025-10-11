@@ -19,6 +19,7 @@ import {
 export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [stats, setStats] = useState({ projects: 0, services: 0, skills: 0, content: 0 });
   const navigate = useNavigate();
   const { t } = useLanguage();
 
@@ -45,6 +46,22 @@ export default function AdminDashboard() {
       }
 
       setIsAdmin(true);
+      
+      // Load stats
+      const [projects, services, skills, content] = await Promise.all([
+        supabase.from('projects').select('id', { count: 'exact', head: true }).eq('user_id', session.user.id),
+        supabase.from('services').select('id', { count: 'exact', head: true }).eq('user_id', session.user.id),
+        supabase.from('skills').select('id', { count: 'exact', head: true }).eq('user_id', session.user.id),
+        supabase.from('content_items').select('id', { count: 'exact', head: true }).eq('user_id', session.user.id),
+      ]);
+      
+      setStats({
+        projects: projects.count || 0,
+        services: services.count || 0,
+        skills: skills.count || 0,
+        content: content.count || 0,
+      });
+      
       setLoading(false);
     };
 
@@ -84,7 +101,10 @@ export default function AdminDashboard() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold">{t('admin.dashboard')}</h1>
+          <div>
+            <h1 className="text-4xl font-bold mb-2">{t('admin.dashboard')}</h1>
+            <p className="text-muted-foreground">Manage your portfolio content</p>
+          </div>
           <div className="flex gap-4">
             <Button variant="outline" asChild className="btn-liquid">
               <Link to="/">View Site</Link>
@@ -94,6 +114,46 @@ export default function AdminDashboard() {
               {t('admin.logout')}
             </Button>
           </div>
+        </div>
+
+        {/* Quick Stats */}
+        <div className="grid md:grid-cols-4 gap-6 mb-8">
+          <GlassPanel className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-muted-foreground text-sm mb-1">Projects</p>
+                <p className="text-3xl font-bold text-accent">{stats.projects}</p>
+              </div>
+              <Briefcase className="h-12 w-12 text-blue-500 opacity-20" />
+            </div>
+          </GlassPanel>
+          <GlassPanel className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-muted-foreground text-sm mb-1">Services</p>
+                <p className="text-3xl font-bold text-accent">{stats.services}</p>
+              </div>
+              <Settings className="h-12 w-12 text-green-500 opacity-20" />
+            </div>
+          </GlassPanel>
+          <GlassPanel className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-muted-foreground text-sm mb-1">Skills</p>
+                <p className="text-3xl font-bold text-accent">{stats.skills}</p>
+              </div>
+              <Award className="h-12 w-12 text-purple-500 opacity-20" />
+            </div>
+          </GlassPanel>
+          <GlassPanel className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-muted-foreground text-sm mb-1">Content</p>
+                <p className="text-3xl font-bold text-accent">{stats.content}</p>
+              </div>
+              <Image className="h-12 w-12 text-pink-500 opacity-20" />
+            </div>
+          </GlassPanel>
         </div>
 
         {/* Menu Grid */}

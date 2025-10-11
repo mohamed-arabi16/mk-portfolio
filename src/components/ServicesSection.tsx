@@ -3,48 +3,36 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "./LanguageProvider";
 import { Code, Video, GraduationCap, Calendar, ArrowRight, CheckCircle } from "lucide-react";
-import qobouliIcon from "@/assets/qobouli-icon.jpg";
-import contentCreationImg from "@/assets/content-creation.jpg";
+import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
+import { useAuth } from "@/hooks/useAuth";
+import { useLocalizedContent } from "@/hooks/useLocalizedContent";
 
-const services = [
-  {
-    id: "fullstack-dev",
-    icon: Code,
-    title: "Full-Stack Development",
-    description: "Modern web applications built with React, Node.js, and cutting-edge technologies.",
-    features: ["MVP Development", "API Integration", "Database Design", "Performance Optimization"],
-    price: "Starting at $2,500",
-    timeline: "2-6 weeks",
-    cta: "Book a Consultation",
-    href: "#contact"
-  },
-  {
-    id: "content-creation",
-    icon: Video,
-    title: "Content Creation",
-    description: "Engaging Instagram Reels and social media content that drives real engagement.",
-    features: ["Instagram Reels", "Tech Tutorials", "Brand Campaigns", "Growth Strategy"],
-    price: "Starting at $500/month",
-    timeline: "Ongoing",
-    cta: "View Content",
-    href: "#content"
-  },
-  {
-    id: "qobouli",
-    icon: GraduationCap,
-    title: "Qobouli Student Registration",
-    description: "Comprehensive university application service for international students in Turkey.",
-    features: ["University Selection", "Application Process", "Visa Support", "Tuition Guidance"],
-    price: "Starting at $299",
-    timeline: "1-3 months",
-    cta: "Learn About Qobouli",
-    href: "https://qobouli.com",
-    external: true
-  }
-];
+const iconMap: Record<string, any> = {
+  Code,
+  Video,
+  GraduationCap,
+};
 
 export function ServicesSection() {
   const { t } = useLanguage();
+  const { session } = useAuth();
+  const { localize } = useLocalizedContent();
+  
+  const { data: services, isLoading } = useQuery({
+    queryKey: ['services', session?.user?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('services')
+        .select('*')
+        .eq('user_id', session?.user?.id || '')
+        .order('display_order');
+      
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!session?.user?.id,
+  });
   
   const scrollToSection = (href: string) => {
     if (href.startsWith('http')) {
@@ -74,56 +62,69 @@ export function ServicesSection() {
 
         {/* Services Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          {services.map((service) => (
-            <GlassPanel key={service.id} interactive className="p-8 group">
-              <div className="mb-6">
-                <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-accent/10 text-accent mb-4">
-                  <service.icon className="w-6 h-6" />
-                </div>
-                <h3 className="text-2xl font-bold mb-3 group-hover:text-accent transition-colors">
-                  {service.title}
-                </h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    {service.description}
-                  </p>
-                </div>
-
-                {/* Features */}
-                <div className="mb-6">
-                  <div className="flex flex-wrap gap-2">
-                    {service.features.map((feature) => (
-                      <Badge key={feature} variant="outline" className="text-xs">
-                        {feature}
-                      </Badge>
-                    ))}
+          {isLoading ? (
+            <div className="col-span-3 text-center py-12">
+              <p className="text-muted-foreground">Loading services...</p>
+            </div>
+          ) : services && services.length > 0 ? (
+            services.map((service) => {
+              const IconComponent = iconMap[service.icon || 'Code'] || Code;
+              const features = service.features_en || [];
+              
+              return (
+                <GlassPanel key={service.id} interactive className="p-8 group">
+                  <div className="mb-6">
+                    <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-accent/10 text-accent mb-4">
+                      <IconComponent className="w-6 h-6" />
+                    </div>
+                    <h3 className="text-2xl font-bold mb-3 group-hover:text-accent transition-colors">
+                      {localize(service, 'title')}
+                    </h3>
+                    <p className="text-muted-foreground leading-relaxed">
+                      {localize(service, 'description')}
+                    </p>
                   </div>
-                </div>
 
-                {/* Pricing & Timeline */}
-                <div className="mb-6 space-y-2">
-                  <div className="flex items-center gap-2 text-sm">
-                    <span className="font-semibold text-accent">{service.price}</span>
+                  {/* Features */}
+                  <div className="mb-6">
+                    <div className="flex flex-wrap gap-2">
+                      {features.map((feature: string, idx: number) => (
+                        <Badge key={idx} variant="outline" className="text-xs">
+                          {feature}
+                        </Badge>
+                      ))}
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Calendar className="w-4 h-4" />
-                    <span>{service.timeline}</span>
-                  </div>
-                </div>
 
-                {/* CTA */}
-                <Button 
-                  onClick={() => scrollToSection(service.href)}
-                  className="w-full btn-liquid btn-accent group-hover:scale-105"
-                >
-                  {service.cta}
-                  {service.external ? (
+                  {/* Pricing & Timeline */}
+                  <div className="mb-6 space-y-2">
+                    <div className="flex items-center gap-2 text-sm">
+                      <span className="font-semibold text-accent">
+                        {localize(service, 'price')}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Calendar className="w-4 h-4" />
+                      <span>{localize(service, 'timeline')}</span>
+                    </div>
+                  </div>
+
+                  {/* CTA */}
+                  <Button 
+                    onClick={() => scrollToSection(service.cta_link || '#contact')}
+                    className="w-full btn-liquid btn-accent group-hover:scale-105"
+                  >
+                    {localize(service, 'cta_text')}
                     <ArrowRight className="w-4 h-4 ml-2" />
-                  ) : (
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  )}
-                </Button>
-              </GlassPanel>
-            ))}
+                  </Button>
+                </GlassPanel>
+              );
+            })
+          ) : (
+            <div className="col-span-3 text-center py-12">
+              <p className="text-muted-foreground">No services yet. Add some in the admin panel!</p>
+            </div>
+          )}
         </div>
 
         {/* Collaboration Notice */}
