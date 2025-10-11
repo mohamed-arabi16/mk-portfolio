@@ -1,0 +1,764 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Apple-inspired Liquid Glass Design System */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=SF+Pro+Display:wght@300;400;500;600;700&display=swap');
+
+@layer base {
+  :root {
+    /* Refined Light Theme Colors with better contrast */
+    --background: 210 11% 97%; /* Soft off-white background (#F5F7F9) */
+    --foreground: 220 9% 15%;   /* Dark grey text (#333) for better contrast */
+    
+    /* Apple Glass Morphism System - Neutral theme with tints */
+    --glass-light: 0 0% 100% / 0.95;
+    --glass-medium: 0 0% 100% / 0.85;
+    --glass-dark: 0 0% 100% / 0.75;
+    --glass-border: 220 13% 88% / 0.9;
+    --glass-highlight: 0 0% 100% / 0.98;
+    --glass-shadow: 0 0% 0% / 0.15;
+    
+    /* Refined Accent Colors */
+    --accent: 180 75% 25%;     /* Darker teal for better contrast */
+    --accent-foreground: 0 0% 100%;
+    --accent-light: 180 100% 45%;
+    --accent-muted: 180 75% 25% / 0.1;
+    
+    /* Apple UI Colors - Neutral tones with subtle tints */
+    --card: 0 0% 100% / 0.98;
+    --card-foreground: 220 9% 8%;
+    --popover: 0 0% 100% / 0.99;
+    --popover-foreground: 220 9% 8%;
+    
+    --primary: 220 9% 15%;
+    --primary-foreground: 0 0% 98%;
+    
+    --secondary: 210 11% 96%;    /* Light secondary with subtle tint */
+    --secondary-foreground: 220 9% 8%;
+    
+    --muted: 210 11% 94%;        /* Muted with subtle tint */
+    --muted-foreground: 220 6% 20%; /* Strong contrast on neutral background */
+    
+    --destructive: 0 84% 60%;    /* Apple's red */
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 220 14% 70%;       /* Darker border for mid-grey theme */
+    --input: 210 11% 88%;
+    --ring: 180 100% 33%;
+    
+    /* Apple Radius System */
+    --radius: 12px;              /* Apple's standard radius */
+    --radius-glass: 20px;        /* Larger radius for glass panels */
+    --radius-small: 8px;
+    
+    /* Apple Shadow System */
+    --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08);
+    --shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+    --shadow-large: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+    --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.12);
+    
+    /* Apple Motion System */
+    --ease-apple: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    --duration-fast: 200ms;
+    --duration-normal: 300ms;
+    --duration-slow: 500ms;
+    
+    /* Enhanced Color Palette */
+    --warm-gray: 210 11% 93%;
+    --warm-gray-foreground: 220 5% 25%;
+    --teal-secondary: 180 75% 35%;
+    --teal-light: 180 75% 85%;
+    --teal-dark: 180 85% 15%;
+    --orange-accent: 25 95% 55%;
+    --orange-light: 25 95% 85%;
+    
+    /* RGB equivalents for animations */
+    --accent-rgb: 0, 183, 183;
+    
+    /* Hero Stats - Better visibility in light mode */
+    --hero-stat-number: 180 85% 20%;  /* Dark teal for numbers */
+    --hero-stat-text: 220 8% 30%;     /* Dark gray for labels */
+    
+    /* Apple Gradients */
+    --gradient-glass: linear-gradient(135deg, rgba(240, 245, 250, 0.9), rgba(220, 225, 230, 0.6));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--teal-secondary)), hsl(var(--accent)));
+    --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)));
+  }
+
+  .dark {
+    /* Apple Dark Mode */
+    --background: 0 0% 6%;       /* #0F0F0F - Apple's dark background */
+    --foreground: 0 0% 95%;      /* Slightly softer white for better readability */
+    
+    --glass-light: 220 9% 12% / 0.7;
+    --glass-medium: 220 9% 12% / 0.5;
+    --glass-dark: 220 9% 12% / 0.3;
+    --glass-border: 0 0% 100% / 0.15;
+    --glass-highlight: 0 0% 100% / 0.05;
+    
+    --card: 220 9% 12% / 0.8;
+    --card-foreground: 0 0% 100%;
+    --popover: 220 9% 12% / 0.95;
+    --popover-foreground: 0 0% 100%;
+    
+    --primary: 180 75% 50%;        /* Better teal for dark mode buttons */
+    --primary-foreground: 220 9% 12%;
+    
+    --secondary: 220 7% 18%;       /* Apple's dark secondary */
+    --secondary-foreground: 0 0% 100%;
+    
+    --muted: 220 7% 18%;
+    --muted-foreground: 220 5% 68%;
+    
+    --destructive: 0 84% 62%;    /* Apple's dark red */
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 220 6% 23%;          /* Apple's dark separator */
+    --input: 220 7% 18%;
+    --ring: 180 100% 33%;
+    
+    /* Dark mode accent colors */
+    --accent: 180 75% 50%;         /* Brighter teal for dark mode */
+    --accent-foreground: 220 9% 12%;
+    
+    /* Hero Stats remain bright for dark mode */
+    --hero-stat-number: 180 75% 50%;  /* Bright teal for numbers */
+    --hero-stat-text: 0 0% 85%;       /* Light gray for labels */
+    
+    /* RGB equivalents for animations */
+    --accent-rgb: 64, 224, 224;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'SF Pro Display', 'Inter', system-ui, -apple-system, sans-serif;
+    font-feature-settings: "kern", "liga", "clig", "calt";
+    font-variation-settings: "opsz" 32;
+    letter-spacing: -0.011em; /* Apple's letter spacing */
+  }
+
+  /* Apple Typography Scale */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'SF Pro Display', 'Inter', system-ui, sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.022em;
+    line-height: 1.1;
+  }
+
+  /* Smooth scrolling with Apple easing */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  * {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  /* Modern Liquid Glass Components */
+  .glass-panel {
+    backdrop-filter: blur(32px) saturate(1.8);
+    background: linear-gradient(135deg, 
+      rgba(255, 255, 255, 0.1),
+      rgba(255, 255, 255, 0.05)
+    );
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    @apply rounded-[var(--radius-glass)];
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.12),
+    0 1px 0 rgba(255, 255, 255, 0.4) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.05) inset;
+  position: relative;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  overflow: hidden;
+}
+
+.glass-panel-subtle {
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.08),
+    0 1px 4px rgba(0, 0, 0, 0.05);
+}
+  
+  /* Sharp edges for navbar */
+  .glass-panel.navbar-glass {
+    border-radius: 0;
+    border-top: none;
+  }
+  
+  /* Removed light overlay animation */
+  
+  .glass-panel:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+      0 15px 30px rgba(0, 0, 0, 0.15),
+      0 5px 10px rgba(0, 0, 0, 0.10),
+      0 1px 0 rgba(255, 255, 255, 0.6) inset;
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+  
+  /* Liquid shimmer effect - disabled */
+  
+  .dark .glass-panel {
+    background: linear-gradient(135deg, 
+      rgba(25, 25, 25, 0.9),
+      rgba(15, 15, 15, 0.7)
+    );
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  /* Dark mode - animations disabled */
+  
+  .dark .glass-panel:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  /* Apple Interactive Cards with subtle elevation */
+  .glass-card {
+    @apply glass-panel;
+    transition: all 0.4s var(--ease-apple);
+    will-change: transform;
+  }
+  
+  .glass-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12), 0 8px 16px rgba(0, 0, 0, 0.08);
+  }
+
+  /* Mobile: Reduce hover effects */
+  @media (hover: none) and (pointer: coarse) {
+    .glass-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15), 
+                  0 4px 16px rgba(0, 0, 0, 0.10),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+  }
+  
+  /* Apple Button System */
+  .btn-liquid {
+    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(230, 235, 240, 0.8);
+    @apply px-6 py-3 text-sm font-medium rounded-[var(--radius)];
+    transition: all 0.3s var(--ease-apple);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .btn-liquid:hover {
+    transform: translateY(-1px);
+    background: rgba(255, 255, 255, 0.6);
+    border-color: rgba(200, 210, 220, 0.9);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.10), 0 2px 6px rgba(0, 0, 0, 0.06);
+  }
+  
+  .dark .btn-liquid {
+    background: rgba(40, 40, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: hsl(var(--foreground));
+  }
+  
+  .dark .btn-liquid:hover {
+    background: rgba(50, 50, 52, 0.9);
+    border-color: rgba(255, 255, 255, 0.25);
+  }
+  
+  .btn-liquid:active {
+    transform: translateY(0) scale(0.98);
+    transition: all var(--duration-fast) var(--ease-apple);
+  }
+  
+  .btn-accent {
+    background: hsl(var(--accent));
+    color: hsl(var(--accent-foreground));
+    border: 1px solid hsl(var(--accent));
+    box-shadow: 0 4px 14px 0 hsl(var(--accent) / 0.25);
+  }
+  
+  .btn-accent:hover {
+    background: hsl(var(--accent) / 0.9);
+    color: hsl(var(--accent-foreground));
+    box-shadow: 0 6px 20px 0 hsl(var(--accent) / 0.35);
+  }
+
+  /* Apple Project Grid with responsive stacking */
+  .project-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 0 1rem;
+  }
+  
+  @media (min-width: 640px) {
+    .project-grid {
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+  }
+  
+  @media (min-width: 768px) {
+    .project-grid {
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2.5rem;
+      padding: 0;
+    }
+  }
+
+  /* RTL Support for project grid */
+  [dir="rtl"] .project-grid {
+    direction: rtl;
+  }
+
+  [dir="rtl"] .project-grid > * {
+    direction: ltr;
+    text-align: right;
+  }
+
+  /* Apple Masonry Grid for Content */
+  .masonry-grid {
+    columns: 1;
+    column-gap: 1.5rem;
+    orphans: 1;
+    widows: 1;
+  }
+  
+  @media (min-width: 640px) {
+    .masonry-grid {
+      columns: 2;
+      column-gap: 2rem;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .masonry-grid {
+      columns: 3;
+      column-gap: 2.5rem;
+    }
+  }
+  
+  @media (min-width: 1280px) {
+    .masonry-grid {
+      columns: 4;
+      column-gap: 3rem;
+    }
+  }
+
+  /* Apple Scroll Animations */
+  .scroll-animate {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all var(--duration-slow) var(--ease-apple);
+  }
+  
+  .scroll-animate.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Mind-blowing animations for enhanced UX */
+  .fade-in {
+    animation: fadeInSpectacular 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  }
+  
+  .slide-up {
+    animation: slideUpSpectacular 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  }
+  
+  .bounce-in {
+    animation: bounceInSpectacular 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+  }
+  
+  .liquid-morph {
+    animation: liquidMorph 2s ease-in-out infinite;
+  }
+  
+  .floating {
+    animation: floating 3s ease-in-out infinite;
+  }
+  
+  .pulse-glow {
+    animation: pulseGlow 2s ease-in-out infinite;
+  }
+  
+  .matrix-rain {
+    animation: matrixRain 0.8s ease-out forwards;
+  }
+  
+  @keyframes fadeInSpectacular {
+    from {
+      opacity: 0;
+      transform: translateY(40px) rotateX(30deg);
+      filter: blur(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) rotateX(0deg);
+      filter: blur(0px);
+    }
+  }
+  
+  @keyframes slideUpSpectacular {
+    from {
+      opacity: 0;
+      transform: translateY(60px) scale(0.8);
+    }
+    50% {
+      opacity: 0.8;
+      transform: translateY(-10px) scale(1.05);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  
+  @keyframes bounceInSpectacular {
+    from {
+      opacity: 0;
+      transform: scale(0.3) rotateY(180deg);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.2) rotateY(90deg);
+    }
+    75% {
+      transform: scale(0.9) rotateY(45deg);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) rotateY(0deg);
+    }
+  }
+  
+  @keyframes liquidMorph {
+    0%, 100% {
+      border-radius: 20px 20px 20px 20px;
+      transform: scale(1);
+    }
+    25% {
+      border-radius: 60px 20px 40px 20px;
+      transform: scale(1.02);
+    }
+    50% {
+      border-radius: 20px 60px 20px 40px;
+      transform: scale(0.98);
+    }
+    75% {
+      border-radius: 40px 20px 60px 20px;
+      transform: scale(1.01);
+    }
+  }
+  
+  @keyframes floating {
+    0%, 100% {
+      transform: translateY(0px) rotateZ(0deg);
+    }
+    33% {
+      transform: translateY(-10px) rotateZ(1deg);
+    }
+    66% {
+      transform: translateY(-5px) rotateZ(-1deg);
+    }
+  }
+  
+  @keyframes pulseGlow {
+    0%, 100% {
+      box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.3);
+      transform: scale(1);
+    }
+    50% {
+      box-shadow: 0 0 40px rgba(var(--accent-rgb), 0.6);
+      transform: scale(1.05);
+    }
+  }
+  
+  @keyframes matrixRain {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+      filter: hue-rotate(0deg);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+      filter: hue-rotate(360deg);
+    }
+  }
+  
+  /* Staggered animation delays */
+  .animate-delay-100 { animation-delay: 100ms; }
+  .animate-delay-200 { animation-delay: 200ms; }
+  .animate-delay-300 { animation-delay: 300ms; }
+  .animate-delay-400 { animation-delay: 400ms; }
+  .animate-delay-500 { animation-delay: 500ms; }
+
+  /* Apple Spacing System */
+  .section-padding {
+    @apply py-20 px-6;
+  }
+  
+  @media (min-width: 768px) {
+    .section-padding {
+      @apply py-28 px-8;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .section-padding {
+      @apply py-32 px-12;
+    }
+  }
+
+  /* Apple Typography Classes */
+  .text-display {
+    font-size: clamp(2.5rem, 8vw, 6rem);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 0.9;
+  }
+  
+  .text-headline {
+    font-size: clamp(1.875rem, 4vw, 3rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  
+  .text-body-large {
+    font-size: clamp(1.125rem, 2vw, 1.375rem);
+    font-weight: 400;
+    letter-spacing: -0.011em;
+    line-height: 1.5;
+  }
+
+  /* Enhanced Content Cards with better text visibility */
+  .content-card {
+    @apply glass-panel overflow-hidden cursor-pointer relative;
+    transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+    will-change: transform;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .content-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 
+      0 20px 40px rgba(0, 0, 0, 0.15), 
+      0 8px 16px rgba(0, 0, 0, 0.10);
+  }
+  
+  .content-card .content-thumbnail {
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    will-change: transform;
+    flex: 1;
+    object-fit: cover;
+  }
+  
+  .content-card:hover .content-thumbnail {
+    transform: scale(1.05);
+    filter: brightness(1.05) contrast(1.05);
+  }
+  
+  /* Light mode: enhance text contrast on hover */
+  .content-card .card-content {
+    position: relative;
+    z-index: 2;
+    transition: all 0.5s ease;
+  }
+  
+  .content-card:hover .card-content {
+    backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 8px;
+    padding: 1rem;
+  }
+  
+  .content-card:hover .card-content * {
+    color: hsl(var(--foreground)) !important;
+    text-shadow: none;
+  }
+
+  /* Dark mode: enhance text contrast on hover */
+  .dark .content-card:hover .card-content {
+    background: rgba(15, 15, 15, 0.95);
+  }
+  
+  .dark .content-card:hover .card-content * {
+    color: hsl(var(--foreground)) !important;
+  }
+
+  /* Mobile: Remove hover overlays */
+  @media (hover: none) and (pointer: coarse) {
+    .content-card::after {
+      display: none;
+    }
+    
+    .content-card:hover {
+      transform: none;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 
+                  0 4px 16px rgba(0, 0, 0, 0.08),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    }
+    
+    .content-card:hover .content-thumbnail {
+      transform: none;
+    }
+  }
+  
+  /* Apple-style parallax background */
+  .parallax-container {
+    perspective: 1000px;
+    transform-style: preserve-3d;
+  }
+
+  /* Enhanced Accessibility Styles */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .sr-only:focus {
+    position: relative;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+  }
+
+  /* High contrast mode with WCAG AA compliance */
+  .high-contrast {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 0%;
+    --accent: 240 100% 30%; /* Darker for better contrast */
+    --muted: 0 0% 95%;
+    --border: 0 0% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 0%;
+    --secondary: 0 0% 95%;
+    --secondary-foreground: 0 0% 10%;
+  }
+
+  .high-contrast .glass-panel {
+    background: rgba(255, 255, 255, 1);
+    border: 2px solid rgba(0, 0, 0, 0.8);
+    backdrop-filter: none;
+  }
+
+  .high-contrast .glass-panel::before {
+    display: none;
+  }
+
+  .high-contrast .content-card:hover::after {
+    display: none;
+  }
+
+  /* Focus styles for better accessibility */
+  *:focus {
+    outline: 2px solid hsl(var(--accent));
+    outline-offset: 2px;
+  }
+
+  /* RTL Language Support */
+  [dir="rtl"] {
+    text-align: right;
+  }
+
+  [dir="rtl"] .glass-panel {
+    direction: rtl;
+  }
+
+  [dir="rtl"] .flex {
+    flex-direction: row-reverse;
+  }
+
+  [dir="rtl"] .space-x-2 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 1;
+  }
+
+  /* Responsive Layout Improvements */
+  @media (max-width: 640px) {
+    .section-padding {
+      @apply py-16 px-4;
+    }
+    
+    .project-grid,
+    .masonry-grid {
+      gap: 1.25rem;
+    }
+    
+    .glass-panel {
+      margin-bottom: 1rem;
+    }
+  }
+
+  /* Enhanced motion - disable reduce motion override */
+  .motion-enhanced {
+    animation-duration: inherit !important;
+    transition-duration: inherit !important;
+  }
+
+  /* Section backgrounds with subtle tints */
+  .section-tinted {
+    background: linear-gradient(180deg, 
+      hsl(var(--background)), 
+      hsl(var(--secondary) / 0.3));
+  }
+
+  .section-tinted-alt {
+    background: linear-gradient(180deg, 
+      hsl(var(--secondary) / 0.2), 
+      hsl(var(--background)));
+  }
+  
+  .parallax-element {
+    transition: transform var(--duration-normal) var(--ease-apple);
+    will-change: transform;
+  }
+
+  /* Hero Stats - Improved visibility and hover effects */
+  .hero-stat {
+    transition: all var(--duration-normal) var(--ease-apple);
+  }
+
+  .hero-stat:hover {
+    backdrop-filter: blur(32px);
+  }
+
+  /* Light mode: Darker text and lighter background on hover */
+  .hero-stat:hover .text-hero-stat-number {
+    color: hsl(var(--teal-dark));
+  }
+
+  .hero-stat:hover .text-hero-stat-text {
+    color: hsl(var(--foreground));
+  }
+
+  /* Dark mode: Keep current bright colors on hover */
+  .dark .hero-stat:hover .text-hero-stat-number {
+    color: hsl(var(--accent));
+  }
+
+  .dark .hero-stat:hover .text-hero-stat-text {
+    color: hsl(var(--foreground));
+  }
+}
