@@ -85,10 +85,14 @@ export default function AdminSkills() {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return;
+
     const skillData = {
       name: formData.get('name') as string,
       category: formData.get('category') as string,
       display_order: parseInt(formData.get('display_order') as string) || 0,
+      user_id: session.user.id,
     };
 
     if (editingSkill) {

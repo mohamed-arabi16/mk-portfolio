@@ -18,14 +18,12 @@ import {
 interface Testimonial {
   id: string;
   client_name: string;
-  client_role_en: string;
-  client_role_ar: string;
-  client_company?: string;
-  client_avatar_url?: string;
+  client_title_en?: string;
+  client_title_ar?: string;
+  avatar_url?: string;
   content_en: string;
   content_ar: string;
-  rating: number;
-  project_name?: string;
+  rating?: number;
   display_order: number;
 }
 
@@ -85,17 +83,19 @@ export default function AdminTestimonials() {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return;
+
     const testimonialData = {
       client_name: formData.get('client_name') as string,
-      client_role_en: formData.get('client_role_en') as string,
-      client_role_ar: formData.get('client_role_ar') as string,
-      client_company: formData.get('client_company') as string || null,
-      client_avatar_url: formData.get('client_avatar_url') as string || null,
+      client_title_en: formData.get('client_title_en') as string || null,
+      client_title_ar: formData.get('client_title_ar') as string || null,
+      avatar_url: formData.get('avatar_url') as string || null,
       content_en: formData.get('content_en') as string,
       content_ar: formData.get('content_ar') as string,
       rating: parseInt(formData.get('rating') as string) || 5,
-      project_name: formData.get('project_name') as string || null,
       display_order: parseInt(formData.get('display_order') as string) || 0,
+      user_id: session.user.id,
     };
 
     if (editingTestimonial) {
@@ -189,21 +189,17 @@ export default function AdminTestimonials() {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm font-medium">Role (English)</label>
-                    <Input name="client_role_en" defaultValue={editingTestimonial?.client_role_en} required />
+                    <label className="text-sm font-medium">Title (English)</label>
+                    <Input name="client_title_en" defaultValue={editingTestimonial?.client_title_en} />
                   </div>
                   <div>
-                    <label className="text-sm font-medium">Role (Arabic)</label>
-                    <Input name="client_role_ar" defaultValue={editingTestimonial?.client_role_ar} required />
+                    <label className="text-sm font-medium">Title (Arabic)</label>
+                    <Input name="client_title_ar" defaultValue={editingTestimonial?.client_title_ar} />
                   </div>
                 </div>
                 <div>
-                  <label className="text-sm font-medium">Company (optional)</label>
-                  <Input name="client_company" defaultValue={editingTestimonial?.client_company || ''} />
-                </div>
-                <div>
-                  <label className="text-sm font-medium">Avatar URL (optional)</label>
-                  <Input name="client_avatar_url" defaultValue={editingTestimonial?.client_avatar_url || ''} />
+                  <label className="text-sm font-medium">Avatar URL</label>
+                  <Input name="avatar_url" type="url" defaultValue={editingTestimonial?.avatar_url || ''} />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
@@ -218,16 +214,12 @@ export default function AdminTestimonials() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="text-sm font-medium">Rating (1-5)</label>
-                    <Input type="number" min="1" max="5" name="rating" defaultValue={editingTestimonial?.rating || 5} required />
+                    <Input type="number" min="1" max="5" name="rating" defaultValue={editingTestimonial?.rating || 5} />
                   </div>
                   <div>
-                    <label className="text-sm font-medium">Project Name (optional)</label>
-                    <Input name="project_name" defaultValue={editingTestimonial?.project_name || ''} />
+                    <label className="text-sm font-medium">Display Order</label>
+                    <Input type="number" name="display_order" defaultValue={editingTestimonial?.display_order || 0} />
                   </div>
-                </div>
-                <div>
-                  <label className="text-sm font-medium">Display Order</label>
-                  <Input type="number" name="display_order" defaultValue={editingTestimonial?.display_order || 0} />
                 </div>
                 <Button type="submit" className="w-full btn-liquid btn-accent">
                   {editingTestimonial ? 'Update' : 'Create'} Testimonial
@@ -244,10 +236,7 @@ export default function AdminTestimonials() {
                 <div className="flex items-start justify-between">
                   <div>
                     <h3 className="font-bold">{testimonial.client_name}</h3>
-                    <p className="text-sm text-muted-foreground">{testimonial.client_role_en}</p>
-                    {testimonial.client_company && (
-                      <p className="text-xs text-muted-foreground">{testimonial.client_company}</p>
-                    )}
+                    <p className="text-sm text-muted-foreground">{testimonial.client_title_en}</p>
                   </div>
                   <div className="flex gap-1">
                     {Array.from({ length: testimonial.rating }).map((_, i) => (
@@ -256,9 +245,6 @@ export default function AdminTestimonials() {
                   </div>
                 </div>
                 <p className="text-sm line-clamp-3">{testimonial.content_en}</p>
-                {testimonial.project_name && (
-                  <p className="text-xs text-muted-foreground">Project: {testimonial.project_name}</p>
-                )}
                 <div className="flex justify-end gap-2 pt-2">
                   <Button
                     variant="outline"

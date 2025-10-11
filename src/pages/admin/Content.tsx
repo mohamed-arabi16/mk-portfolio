@@ -94,6 +94,9 @@ export default function AdminContent() {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return;
+
     const itemData = {
       title_en: formData.get('title_en') as string,
       title_ar: formData.get('title_ar') as string,
@@ -107,6 +110,7 @@ export default function AdminContent() {
       likes: parseInt(formData.get('likes') as string) || 0,
       engagement_rate: parseFloat(formData.get('engagement_rate') as string) || 0,
       display_order: parseInt(formData.get('display_order') as string) || 0,
+      user_id: session.user.id,
     };
 
     if (editingItem) {

@@ -82,6 +82,9 @@ export default function AdminStats() {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return;
+
     const statData = {
       stat_key: formData.get('stat_key') as string,
       label_en: formData.get('label_en') as string,
@@ -90,6 +93,7 @@ export default function AdminStats() {
       description_en: formData.get('description_en') as string || null,
       description_ar: formData.get('description_ar') as string || null,
       display_order: parseInt(formData.get('display_order') as string) || 0,
+      user_id: session.user.id,
     };
 
     if (editingStat) {

@@ -91,6 +91,9 @@ export default function AdminServices() {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return;
+
     const serviceData = {
       icon: formData.get('icon') as string,
       title_en: formData.get('title_en') as string,
@@ -108,6 +111,7 @@ export default function AdminServices() {
       cta_link: formData.get('cta_link') as string || null,
       is_external: formData.get('is_external') === 'true',
       display_order: parseInt(formData.get('display_order') as string) || 0,
+      user_id: session.user.id,
     };
 
     if (editingService) {

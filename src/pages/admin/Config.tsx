@@ -87,6 +87,12 @@ export default function AdminConfig() {
     setSaving(true);
     const formData = new FormData(e.currentTarget);
     
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      setSaving(false);
+      return;
+    }
+
     const configData = {
       name: formData.get('name') as string,
       bio_en: formData.get('bio_en') as string || null,
@@ -106,6 +112,7 @@ export default function AdminConfig() {
       hero_title_3_ar: formData.get('hero_title_3_ar') as string || null,
       hero_subtitle_en: formData.get('hero_subtitle_en') as string || null,
       hero_subtitle_ar: formData.get('hero_subtitle_ar') as string || null,
+      user_id: session.user.id,
     };
 
     if (config) {
