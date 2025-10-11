@@ -1,13 +1,15 @@
 import { useState } from "react";
-import { Menu, X, Moon, Sun } from "lucide-react";
+import { Menu, X, Moon, Sun, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/ThemeProvider";
 import { useLanguage } from "@/components/LanguageProvider";
 import { LanguageToggle } from "@/components/LanguageToggle";
-
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 import { analytics } from "@/lib/analytics";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const getNavigationItems = (t: (key: string) => string) => [
   { name: t("nav.home"), href: "/" },
@@ -20,7 +22,10 @@ export function NavigationBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { theme, setTheme } = useTheme();
   const { t } = useLanguage();
+  const { user } = useAuth();
+  const { toast } = useToast();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -33,6 +38,15 @@ export function NavigationBar() {
     const newTheme = theme === "dark" ? "light" : "dark";
     setTheme(newTheme);
     analytics.event('theme_toggle', 'UI', newTheme);
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    toast({
+      title: t('admin.logoutSuccess'),
+      description: "See you soon!",
+    });
+    navigate('/');
   };
 
   const navigationItems = getNavigationItems(t);
@@ -90,6 +104,41 @@ export function NavigationBar() {
                 <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
                 <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
               </Button>
+
+              {/* Auth Buttons */}
+              {user ? (
+                <>
+                  <Link to="/admin">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-9 w-9 rounded-xl hover:bg-accent/10"
+                      title="Admin Panel"
+                    >
+                      <User className="h-5 w-5" />
+                    </Button>
+                  </Link>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={handleLogout}
+                    className="h-9 w-9 rounded-xl hover:bg-accent/10"
+                    title={t('admin.logout')}
+                  >
+                    <LogOut className="h-5 w-5" />
+                  </Button>
+                </>
+              ) : (
+                <Link to="/auth">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="rounded-xl hover:bg-accent/10"
+                  >
+                    {t('admin.login')}
+                  </Button>
+                </Link>
+              )}
             </div>
           </div>
 

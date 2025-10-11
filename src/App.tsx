@@ -16,6 +16,7 @@ import Qobouli from "./pages/Qobouli";
 import ClientSuccess from "./pages/ClientSuccess";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
+import Auth from "./pages/Auth";
 import AdminLogin from "./pages/admin/Login";
 import AdminDashboard from "./pages/admin/Dashboard";
 import AdminProjects from "./pages/admin/Projects";
@@ -28,6 +29,8 @@ import AdminConfig from "./pages/admin/Config";
 import AdminTranslations from "./pages/admin/Translations";
 import { CaseStudy } from "@/components/CaseStudy";
 import { PerformanceObserver } from "@/components/PerformanceObserver";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { AuthProvider } from "@/hooks/useAuth";
 import { analytics } from "@/lib/analytics";
 
 const queryClient = new QueryClient();
@@ -44,6 +47,7 @@ const App = () => {
     <HelmetProvider>
       <ThemeProvider defaultTheme="light" storageKey="portfolio-theme">
       <LanguageProvider defaultLanguage="en">
+      <AuthProvider>
       <TooltipProvider>
         <Toaster />
         <Sonner />
@@ -59,23 +63,27 @@ const App = () => {
             <Route path="/contact" element={<Contact />} />
             <Route path="/case-study/:id" element={<CaseStudy />} />
             
-            {/* Admin Routes */}
+            {/* Auth Routes */}
+            <Route path="/auth" element={<Auth />} />
             <Route path="/admin/login" element={<AdminLogin />} />
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/admin/projects" element={<AdminProjects />} />
-            <Route path="/admin/services" element={<AdminServices />} />
-            <Route path="/admin/skills" element={<AdminSkills />} />
-            <Route path="/admin/content" element={<AdminContent />} />
-            <Route path="/admin/stats" element={<AdminStats />} />
-            <Route path="/admin/testimonials" element={<AdminTestimonials />} />
-            <Route path="/admin/config" element={<AdminConfig />} />
-            <Route path="/admin/translations" element={<AdminTranslations />} />
+            
+            {/* Protected Admin Routes */}
+            <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+            <Route path="/admin/projects" element={<ProtectedRoute><AdminProjects /></ProtectedRoute>} />
+            <Route path="/admin/services" element={<ProtectedRoute><AdminServices /></ProtectedRoute>} />
+            <Route path="/admin/skills" element={<ProtectedRoute><AdminSkills /></ProtectedRoute>} />
+            <Route path="/admin/content" element={<ProtectedRoute><AdminContent /></ProtectedRoute>} />
+            <Route path="/admin/stats" element={<ProtectedRoute><AdminStats /></ProtectedRoute>} />
+            <Route path="/admin/testimonials" element={<ProtectedRoute><AdminTestimonials /></ProtectedRoute>} />
+            <Route path="/admin/config" element={<ProtectedRoute><AdminConfig /></ProtectedRoute>} />
+            <Route path="/admin/translations" element={<ProtectedRoute><AdminTranslations /></ProtectedRoute>} />
             
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
+      </AuthProvider>
       </LanguageProvider>
     </ThemeProvider>
     </HelmetProvider>

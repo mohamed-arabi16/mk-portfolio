@@ -3,10 +3,54 @@ import { Button } from "@/components/ui/button";
 import { ArrowDown, ChevronRight, Download } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/components/LanguageProvider";
+import { useLocalizedContent } from "@/hooks/useLocalizedContent";
+import { useAuth } from "@/hooks/useAuth";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import heroImage from "@/assets/hero-bg.jpg";
 
 export function Hero() {
   const { t } = useLanguage();
+  const { localize } = useLocalizedContent();
+  const { user } = useAuth();
+
+  // Fetch portfolio config
+  const { data: config } = useQuery({
+    queryKey: ['portfolio_config', user?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('portfolio_config')
+        .select('*')
+        .eq('user_id', user?.id || '')
+        .single();
+      
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user?.id,
+  });
+
+  // Fetch stats
+  const { data: stats } = useQuery({
+    queryKey: ['stats', user?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('stats')
+        .select('*')
+        .eq('user_id', user?.id || '')
+        .order('display_order', { ascending: true });
+      
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user?.id,
+  });
+
+  // Fallback to translation keys if no database data
+  const heroTitle1 = config ? localize(config, 'hero_title_1') : t('hero.title1');
+  const heroTitle2 = config ? localize(config, 'hero_title_2') : t('hero.title2');
+  const heroSubtitle = config ? localize(config, 'hero_subtitle') : t('hero.subtitle');
+  const location = config?.location || t('hero.location');
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 md:pt-0">
@@ -26,15 +70,15 @@ export function Hero() {
           {/* Main Heading */}
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold font-serif mb-6 leading-tight animate-fade-in">
             <span className="text-foreground drop-shadow-lg">
-              {t('hero.title1')} {t('hero.title2')} {t('hero.title3')}
+              {heroTitle1} {heroTitle2}
             </span>
             <br />
-            <span className="text-foreground/70 text-2xl md:text-3xl">{t('hero.location')}</span>
+            <span className="text-foreground/70 text-2xl md:text-3xl">{location}</span>
           </h1>
           
           {/* Subtitle */}
           <p className="text-xl md:text-2xl text-foreground/80 mb-8 max-w-3xl mx-auto leading-relaxed drop-shadow-md">
-            {t('hero.subtitle')}
+            {heroSubtitle}
           </p>
           
           {/* CTA Buttons */}
@@ -49,7 +93,7 @@ export function Hero() {
               </Button>
             </Link>
             
-            <a href="/MohamedKH_CV.pdf" download>
+            <a href={config?.cv_url || "/MohamedKH_CV.pdf"} download>
               <Button 
                 size="lg" 
                 variant="outline"
@@ -67,18 +111,29 @@ export function Hero() {
           
           {/* Stats */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-2xl mx-auto">
-            <GlassPanel className="hero-stat p-6 text-center animate-fade-in">
-              <div className="text-3xl font-bold text-accent mb-1">50+</div>
-              <div className="text-sm text-muted-foreground">Projects Completed</div>
-            </GlassPanel>
-            <GlassPanel className="hero-stat p-6 text-center animate-fade-in">
-              <div className="text-3xl font-bold text-accent mb-1">150K+</div>
-              <div className="text-sm text-muted-foreground">Content Views</div>
-            </GlassPanel>
-            <GlassPanel className="hero-stat p-6 text-center animate-fade-in">
-              <div className="text-3xl font-bold text-accent mb-1">92%</div>
-              <div className="text-sm text-muted-foreground">Client Satisfaction</div>
-            </GlassPanel>
+            {stats && stats.length > 0 ? (
+              stats.slice(0, 3).map((stat) => (
+                <GlassPanel key={stat.id} className="hero-stat p-6 text-center animate-fade-in">
+                  <div className="text-3xl font-bold text-accent mb-1">{stat.value}</div>
+                  <div className="text-sm text-muted-foreground">{localize(stat, 'label')}</div>
+                </GlassPanel>
+              ))
+            ) : (
+              <>
+                <GlassPanel className="hero-stat p-6 text-center animate-fade-in">
+                  <div className="text-3xl font-bold text-accent mb-1">{t('hero.statsProjectsValue')}</div>
+                  <div className="text-sm text-muted-foreground">{t('hero.statsProjectsLabel')}</div>
+                </GlassPanel>
+                <GlassPanel className="hero-stat p-6 text-center animate-fade-in">
+                  <div className="text-3xl font-bold text-accent mb-1">{t('hero.statsViewsValue')}</div>
+                  <div className="text-sm text-muted-foreground">{t('hero.statsViewsLabel')}</div>
+                </GlassPanel>
+                <GlassPanel className="hero-stat p-6 text-center animate-fade-in">
+                  <div className="text-3xl font-bold text-accent mb-1">{t('hero.statsSatisfactionValue')}</div>
+                  <div className="text-sm text-muted-foreground">{t('hero.statsSatisfactionLabel')}</div>
+                </GlassPanel>
+              </>
+            )}
           </div>
         </div>
       </div>
