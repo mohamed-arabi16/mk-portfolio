@@ -11,36 +11,35 @@ export function AboutSection() {
   const { localize } = useLocalizedContent();
   const { user } = useAuth();
 
-  // Fetch portfolio config
+  // Fetch portfolio config (publicly accessible)
   const { data: config } = useQuery({
-    queryKey: ['portfolio_config', user?.id],
+    queryKey: ['portfolio_config_public'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('portfolio_config')
         .select('*')
-        .eq('user_id', user?.id || '')
+        .limit(1)
         .single();
       
       if (error) throw error;
       return data;
     },
-    enabled: !!user?.id,
+    enabled: true,
   });
 
-  // Fetch skills
+  // Fetch skills (publicly accessible)
   const { data: skills } = useQuery({
-    queryKey: ['skills', user?.id],
+    queryKey: ['skills_public'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('skills')
         .select('*')
-        .eq('user_id', user?.id || '')
         .order('display_order', { ascending: true });
       
       if (error) throw error;
       return data;
     },
-    enabled: !!user?.id,
+    enabled: true,
   });
 
   // Group skills by category
@@ -88,40 +87,36 @@ export function AboutSection() {
             <GlassPanel className="p-6">
               <div className="flex items-center gap-3 mb-4">
                 <Globe className="w-5 h-5 text-accent" />
-                <h4 className="font-semibold text-foreground">{t('about.globalPerspectiveTitle')}</h4>
+                <h4 className="font-semibold text-foreground">
+                  {config ? localize(config, 'global_perspective_title') : t('about.globalPerspectiveTitle')}
+                </h4>
               </div>
               <p className="text-sm text-muted-foreground">
-                {t('about.globalPerspectiveDesc')}
+                {config ? localize(config, 'global_perspective_desc') : t('about.globalPerspectiveDesc')}
               </p>
             </GlassPanel>
 
             <GlassPanel className="p-6">
               <div className="flex items-center gap-3 mb-4">
                 <Lightbulb className="w-5 h-5 text-accent" />
-                <h4 className="font-semibold text-foreground">{t('about.careerEvolutionTitle')}</h4>
+                <h4 className="font-semibold text-foreground">
+                  {config ? localize(config, 'career_evolution_title') : t('about.careerEvolutionTitle')}
+                </h4>
               </div>
               <p className="text-sm text-muted-foreground">
-                {t('about.careerEvolutionDesc')}
+                {config ? localize(config, 'career_evolution_desc') : t('about.careerEvolutionDesc')}
               </p>
             </GlassPanel>
 
             <GlassPanel className="p-6">
               <div className="flex items-center gap-3 mb-4">
                 <Users className="w-5 h-5 text-accent" />
-                <h4 className="font-semibold text-foreground">{t('about.collaborativeTitle')}</h4>
+                <h4 className="font-semibold text-foreground">
+                  {config ? localize(config, 'cooperative_approach_title') : t('about.collaborativeTitle')}
+                </h4>
               </div>
               <p className="text-sm text-muted-foreground">
-                {t('about.collaborativeDesc')}
-              </p>
-            </GlassPanel>
-
-            <GlassPanel className="p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <Heart className="w-5 h-5 text-accent" />
-                <h4 className="font-semibold text-foreground">{t('about.coreValuesTitle')}</h4>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                {t('about.coreValuesDesc')}
+                {config ? localize(config, 'cooperative_approach_desc') : t('about.collaborativeDesc')}
               </p>
             </GlassPanel>
           </div>

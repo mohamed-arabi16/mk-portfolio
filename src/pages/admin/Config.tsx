@@ -29,6 +29,18 @@ interface PortfolioConfig {
   hero_title_3_ar?: string;
   hero_subtitle_en?: string;
   hero_subtitle_ar?: string;
+  global_perspective_title_en?: string;
+  global_perspective_title_ar?: string;
+  global_perspective_desc_en?: string;
+  global_perspective_desc_ar?: string;
+  career_evolution_title_en?: string;
+  career_evolution_title_ar?: string;
+  career_evolution_desc_en?: string;
+  career_evolution_desc_ar?: string;
+  cooperative_approach_title_en?: string;
+  cooperative_approach_title_ar?: string;
+  cooperative_approach_desc_en?: string;
+  cooperative_approach_desc_ar?: string;
 }
 
 export default function AdminConfig() {
@@ -112,6 +124,18 @@ export default function AdminConfig() {
       hero_title_3_ar: formData.get('hero_title_3_ar') as string || null,
       hero_subtitle_en: formData.get('hero_subtitle_en') as string || null,
       hero_subtitle_ar: formData.get('hero_subtitle_ar') as string || null,
+      global_perspective_title_en: formData.get('global_perspective_title_en') as string || null,
+      global_perspective_title_ar: formData.get('global_perspective_title_ar') as string || null,
+      global_perspective_desc_en: formData.get('global_perspective_desc_en') as string || null,
+      global_perspective_desc_ar: formData.get('global_perspective_desc_ar') as string || null,
+      career_evolution_title_en: formData.get('career_evolution_title_en') as string || null,
+      career_evolution_title_ar: formData.get('career_evolution_title_ar') as string || null,
+      career_evolution_desc_en: formData.get('career_evolution_desc_en') as string || null,
+      career_evolution_desc_ar: formData.get('career_evolution_desc_ar') as string || null,
+      cooperative_approach_title_en: formData.get('cooperative_approach_title_en') as string || null,
+      cooperative_approach_title_ar: formData.get('cooperative_approach_title_ar') as string || null,
+      cooperative_approach_desc_en: formData.get('cooperative_approach_desc_en') as string || null,
+      cooperative_approach_desc_ar: formData.get('cooperative_approach_desc_ar') as string || null,
       user_id: session.user.id,
     };
 
@@ -168,9 +192,10 @@ export default function AdminConfig() {
         <GlassPanel className="p-6">
           <form onSubmit={handleSave}>
             <Tabs defaultValue="general" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 mb-6">
+              <TabsList className="grid w-full grid-cols-4 mb-6">
                 <TabsTrigger value="general">General</TabsTrigger>
                 <TabsTrigger value="hero">Hero Section</TabsTrigger>
+                <TabsTrigger value="about">About Content</TabsTrigger>
                 <TabsTrigger value="links">Links & Social</TabsTrigger>
               </TabsList>
 
@@ -244,6 +269,69 @@ export default function AdminConfig() {
                   <div>
                     <label className="text-sm font-medium">Hero Subtitle (Arabic)</label>
                     <Textarea name="hero_subtitle_ar" defaultValue={config?.hero_subtitle_ar || ''} rows={3} />
+                  </div>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="about" className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-medium">Global Perspective Title (English)</label>
+                    <Input name="global_perspective_title_en" defaultValue={config?.global_perspective_title_en || ''} />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Global Perspective Title (Arabic)</label>
+                    <Input name="global_perspective_title_ar" defaultValue={config?.global_perspective_title_ar || ''} />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-medium">Global Perspective Description (English)</label>
+                    <Textarea name="global_perspective_desc_en" defaultValue={config?.global_perspective_desc_en || ''} rows={3} />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Global Perspective Description (Arabic)</label>
+                    <Textarea name="global_perspective_desc_ar" defaultValue={config?.global_perspective_desc_ar || ''} rows={3} />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-medium">Career Evolution Title (English)</label>
+                    <Input name="career_evolution_title_en" defaultValue={config?.career_evolution_title_en || ''} />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Career Evolution Title (Arabic)</label>
+                    <Input name="career_evolution_title_ar" defaultValue={config?.career_evolution_title_ar || ''} />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-medium">Career Evolution Description (English)</label>
+                    <Textarea name="career_evolution_desc_en" defaultValue={config?.career_evolution_desc_en || ''} rows={3} />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Career Evolution Description (Arabic)</label>
+                    <Textarea name="career_evolution_desc_ar" defaultValue={config?.career_evolution_desc_ar || ''} rows={3} />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-medium">Cooperative Approach Title (English)</label>
+                    <Input name="cooperative_approach_title_en" defaultValue={config?.cooperative_approach_title_en || ''} />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Cooperative Approach Title (Arabic)</label>
+                    <Input name="cooperative_approach_title_ar" defaultValue={config?.cooperative_approach_title_ar || ''} />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-medium">Cooperative Approach Description (English)</label>
+                    <Textarea name="cooperative_approach_desc_en" defaultValue={config?.cooperative_approach_desc_en || ''} rows={3} />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Cooperative Approach Description (Arabic)</label>
+                    <Textarea name="cooperative_approach_desc_ar" defaultValue={config?.cooperative_approach_desc_ar || ''} rows={3} />
                   </div>
                 </div>
               </TabsContent>

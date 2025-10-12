@@ -40,16 +40,16 @@ export function ContactSection() {
       
       // Show success toast
       toast({
-        title: "Message sent successfully!",
-        description: "Thank you for reaching out. I'll get back to you within 24 hours.",
+        title: t('contact.successTitle'),
+        description: t('contact.successDesc'),
       });
       
       // Reset form
       form.reset();
     } catch (error) {
       toast({
-        title: "Error sending message",
-        description: "Please try again or contact me directly via WhatsApp.",
+        title: t('contact.errorTitle'),
+        description: t('contact.errorDesc'),
         variant: "destructive",
       });
     }
@@ -122,20 +122,20 @@ export function ContactSection() {
                   name="projectType"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Project Type</FormLabel>
+                      <FormLabel>{t('contact.projectType')}</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger className="bg-background/50">
-                            <SelectValue placeholder="Select a project type" />
+                            <SelectValue placeholder={t('contact.projectTypePlaceholder')} />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="app-mvp">App MVP Sprint</SelectItem>
-                          <SelectItem value="content-growth">Content Growth 30-Day</SelectItem>
-                          <SelectItem value="hybrid-launch">Hybrid Launch</SelectItem>
-                          <SelectItem value="qobouli">Qobouli Student Registration</SelectItem>
-                          <SelectItem value="consulting">Consulting</SelectItem>
-                          <SelectItem value="other">Other</SelectItem>
+                          <SelectItem value="app-mvp">{t('contact.projectAppMvp')}</SelectItem>
+                          <SelectItem value="content-growth">{t('contact.projectContentGrowth')}</SelectItem>
+                          <SelectItem value="hybrid-launch">{t('contact.projectHybridLaunch')}</SelectItem>
+                          <SelectItem value="qobouli">{t('contact.projectQobouli')}</SelectItem>
+                          <SelectItem value="consulting">{t('contact.projectConsulting')}</SelectItem>
+                          <SelectItem value="other">{t('contact.projectOther')}</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -167,7 +167,7 @@ export function ContactSection() {
                   disabled={form.formState.isSubmitting}
                 >
                   <Mail className="w-5 h-5 mr-2" />
-                  {form.formState.isSubmitting ? "Sending..." : t('contact.send')}
+                  {form.formState.isSubmitting ? t('contact.sending') : t('contact.send')}
                 </Button>
               </form>
             </Form>
@@ -209,19 +209,19 @@ export function ContactSection() {
 
             {/* Response Time */}
             <GlassPanel className="p-6 text-center">
-              <div className="text-3xl font-bold text-accent mb-2">24h</div>
-              <div className="text-muted-foreground">Average Response Time</div>
+              <div className="text-3xl font-bold text-accent mb-2">{t('contact.responseTime')}</div>
+              <div className="text-muted-foreground">{t('contact.avgResponseTime')}</div>
             </GlassPanel>
 
             {/* Availability */}
             <GlassPanel className="p-6">
-              <h4 className="font-semibold mb-3">Current Availability</h4>
+              <h4 className="font-semibold mb-3">{t('contact.availability')}</h4>
               <div className="flex items-center gap-2 mb-2">
                 <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                <span className="text-sm">Available for new projects</span>
+                <span className="text-sm">{t('contact.availableForProjects')}</span>
               </div>
               <p className="text-sm text-muted-foreground">
-                Next availability: Immediate start possible
+                {t('contact.nextAvailability')}
               </p>
             </GlassPanel>
           </div>

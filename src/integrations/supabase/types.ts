@@ -75,10 +75,22 @@ export type Database = {
         Row: {
           bio_ar: string | null
           bio_en: string | null
+          career_evolution_desc_ar: string | null
+          career_evolution_desc_en: string | null
+          career_evolution_title_ar: string | null
+          career_evolution_title_en: string | null
+          cooperative_approach_desc_ar: string | null
+          cooperative_approach_desc_en: string | null
+          cooperative_approach_title_ar: string | null
+          cooperative_approach_title_en: string | null
           created_at: string
           cv_url: string | null
           email: string | null
           github_url: string | null
+          global_perspective_desc_ar: string | null
+          global_perspective_desc_en: string | null
+          global_perspective_title_ar: string | null
+          global_perspective_title_en: string | null
           hero_subtitle_ar: string | null
           hero_subtitle_en: string | null
           hero_title_1_ar: string | null
@@ -96,15 +108,28 @@ export type Database = {
           user_id: string
           username: string | null
           whatsapp_link: string | null
+          work_section_bg_url: string | null
           youtube_url: string | null
         }
         Insert: {
           bio_ar?: string | null
           bio_en?: string | null
+          career_evolution_desc_ar?: string | null
+          career_evolution_desc_en?: string | null
+          career_evolution_title_ar?: string | null
+          career_evolution_title_en?: string | null
+          cooperative_approach_desc_ar?: string | null
+          cooperative_approach_desc_en?: string | null
+          cooperative_approach_title_ar?: string | null
+          cooperative_approach_title_en?: string | null
           created_at?: string
           cv_url?: string | null
           email?: string | null
           github_url?: string | null
+          global_perspective_desc_ar?: string | null
+          global_perspective_desc_en?: string | null
+          global_perspective_title_ar?: string | null
+          global_perspective_title_en?: string | null
           hero_subtitle_ar?: string | null
           hero_subtitle_en?: string | null
           hero_title_1_ar?: string | null
@@ -122,15 +147,28 @@ export type Database = {
           user_id: string
           username?: string | null
           whatsapp_link?: string | null
+          work_section_bg_url?: string | null
           youtube_url?: string | null
         }
         Update: {
           bio_ar?: string | null
           bio_en?: string | null
+          career_evolution_desc_ar?: string | null
+          career_evolution_desc_en?: string | null
+          career_evolution_title_ar?: string | null
+          career_evolution_title_en?: string | null
+          cooperative_approach_desc_ar?: string | null
+          cooperative_approach_desc_en?: string | null
+          cooperative_approach_title_ar?: string | null
+          cooperative_approach_title_en?: string | null
           created_at?: string
           cv_url?: string | null
           email?: string | null
           github_url?: string | null
+          global_perspective_desc_ar?: string | null
+          global_perspective_desc_en?: string | null
+          global_perspective_title_ar?: string | null
+          global_perspective_title_en?: string | null
           hero_subtitle_ar?: string | null
           hero_subtitle_en?: string | null
           hero_title_1_ar?: string | null
@@ -148,6 +186,7 @@ export type Database = {
           user_id?: string
           username?: string | null
           whatsapp_link?: string | null
+          work_section_bg_url?: string | null
           youtube_url?: string | null
         }
         Relationships: []

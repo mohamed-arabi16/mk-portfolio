@@ -14,36 +14,36 @@ export function Hero() {
   const { localize } = useLocalizedContent();
   const { user } = useAuth();
 
-  // Fetch portfolio config
+  // Fetch portfolio config (publicly accessible - first user)
   const { data: config } = useQuery({
-    queryKey: ['portfolio_config', user?.id],
+    queryKey: ['portfolio_config_public'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('portfolio_config')
         .select('*')
-        .eq('user_id', user?.id || '')
+        .limit(1)
         .single();
       
       if (error) throw error;
       return data;
     },
-    enabled: !!user?.id,
+    enabled: true,
   });
 
-  // Fetch stats
+  // Fetch stats (publicly accessible)
   const { data: stats } = useQuery({
-    queryKey: ['stats', user?.id],
+    queryKey: ['stats_public'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('stats')
         .select('*')
-        .eq('user_id', user?.id || '')
-        .order('display_order', { ascending: true });
+        .order('display_order', { ascending: true })
+        .limit(3);
       
       if (error) throw error;
       return data;
     },
-    enabled: !!user?.id,
+    enabled: true,
   });
 
   // Fallback to translation keys if no database data

@@ -20,18 +20,17 @@ export function ServicesSection() {
   const { localize } = useLocalizedContent();
   
   const { data: services, isLoading } = useQuery({
-    queryKey: ['services', session?.user?.id],
+    queryKey: ['services_public'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('services')
         .select('*')
-        .eq('user_id', session?.user?.id || '')
         .order('display_order');
       
       if (error) throw error;
       return data;
     },
-    enabled: !!session?.user?.id,
+    enabled: true,
   });
   
   const scrollToSection = (href: string) => {

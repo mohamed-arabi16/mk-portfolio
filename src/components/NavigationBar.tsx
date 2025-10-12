@@ -105,8 +105,8 @@ export function NavigationBar() {
                 <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
               </Button>
 
-              {/* Auth Buttons */}
-              {user ? (
+              {/* Auth Buttons - Only show when authenticated */}
+              {user && (
                 <>
                   <Link to="/admin">
                     <Button
@@ -128,16 +128,6 @@ export function NavigationBar() {
                     <LogOut className="h-5 w-5" />
                   </Button>
                 </>
-              ) : (
-                <Link to="/auth">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="rounded-xl hover:bg-accent/10"
-                  >
-                    {t('admin.login')}
-                  </Button>
-                </Link>
               )}
             </div>
           </div>

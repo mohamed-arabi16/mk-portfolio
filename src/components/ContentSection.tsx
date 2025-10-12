@@ -31,18 +31,17 @@ export function ContentSection() {
   const { localize } = useLocalizedContent();
 
   const { data: contentItems, isLoading } = useQuery({
-    queryKey: ['content_items', session?.user?.id],
+    queryKey: ['content_items_public'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('content_items')
         .select('*')
-        .eq('user_id', session?.user?.id || '')
         .order('display_order');
       
       if (error) throw error;
       return data;
     },
-    enabled: !!session?.user?.id,
+    enabled: true,
   });
 
   const handleContentClick = (item: any) => {

@@ -11,33 +11,31 @@ export function TestimonialsSection() {
   const { localize } = useLocalizedContent();
   
   const { data: testimonials, isLoading: testimonialsLoading } = useQuery({
-    queryKey: ['testimonials', session?.user?.id],
+    queryKey: ['testimonials_public'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('testimonials')
         .select('*')
-        .eq('user_id', session?.user?.id || '')
         .order('display_order');
       
       if (error) throw error;
       return data;
     },
-    enabled: !!session?.user?.id,
+    enabled: true,
   });
 
   const { data: stats, isLoading: statsLoading } = useQuery({
-    queryKey: ['stats', session?.user?.id],
+    queryKey: ['stats_public'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('stats')
         .select('*')
-        .eq('user_id', session?.user?.id || '')
         .order('display_order');
       
       if (error) throw error;
       return data;
     },
-    enabled: !!session?.user?.id,
+    enabled: true,
   });
   return (
     <section className="py-20 px-6 bg-gradient-to-b from-muted/10 to-background">

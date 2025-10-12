@@ -27,18 +27,17 @@ export function WorkSection() {
   const { session } = useAuth();
   
   const { data: projects, isLoading } = useQuery({
-    queryKey: ['projects', session?.user?.id],
+    queryKey: ['projects_public'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('projects')
         .select('*')
-        .eq('user_id', session?.user?.id || '')
         .order('display_order');
       
       if (error) throw error;
       return data;
     },
-    enabled: !!session?.user?.id,
+    enabled: true,
   });
   
   const allStacks = Array.from(new Set(projects?.flatMap(p => p.stack || []) || []));
