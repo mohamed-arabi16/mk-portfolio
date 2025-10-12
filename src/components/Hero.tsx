@@ -51,14 +51,15 @@ export function Hero() {
   const heroTitle2 = config ? localize(config, 'hero_title_2') : t('hero.title2');
   const heroSubtitle = config ? localize(config, 'hero_subtitle') : t('hero.subtitle');
   const location = config?.location || t('hero.location');
+  const heroBgUrl = config?.hero_bg_url || heroImage;
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 md:pt-0">
       {/* Background Image */}
       <div className="absolute inset-0">
         <img 
-          src={heroImage} 
-          alt="Development workspace" 
+          src={heroBgUrl} 
+          alt="Hero background" 
           className="w-full h-full object-cover blur-[2px]"
         />
         <div className="absolute inset-0 bg-background/60" />

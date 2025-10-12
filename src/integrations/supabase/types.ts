@@ -91,6 +91,7 @@ export type Database = {
           global_perspective_desc_en: string | null
           global_perspective_title_ar: string | null
           global_perspective_title_en: string | null
+          hero_bg_url: string | null
           hero_subtitle_ar: string | null
           hero_subtitle_en: string | null
           hero_title_1_ar: string | null
@@ -130,6 +131,7 @@ export type Database = {
           global_perspective_desc_en?: string | null
           global_perspective_title_ar?: string | null
           global_perspective_title_en?: string | null
+          hero_bg_url?: string | null
           hero_subtitle_ar?: string | null
           hero_subtitle_en?: string | null
           hero_title_1_ar?: string | null
@@ -169,6 +171,7 @@ export type Database = {
           global_perspective_desc_en?: string | null
           global_perspective_title_ar?: string | null
           global_perspective_title_en?: string | null
+          hero_bg_url?: string | null
           hero_subtitle_ar?: string | null
           hero_subtitle_en?: string | null
           hero_title_1_ar?: string | null

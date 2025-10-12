@@ -9,6 +9,14 @@ import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
 import projectShowcaseImg from "@/assets/project-showcase.jpg";
 
+const formatExternalUrl = (url: string): string => {
+  if (!url) return '';
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url;
+  }
+  return `https://${url}`;
+};
+
 const stackColors: Record<string, string> = {
   "Next.js": "bg-foreground text-background",
   "React": "bg-blue-500/10 text-blue-600 dark:text-blue-400",
@@ -157,7 +165,7 @@ export function WorkSection() {
                     className="w-full btn-liquid btn-accent group-hover:scale-105"
                     onClick={() => {
                       if (project.project_url && !project.is_coming_soon) {
-                        window.open(project.project_url, '_blank');
+                        window.open(formatExternalUrl(project.project_url), '_blank');
                       }
                     }}
                     disabled={project.is_coming_soon}
