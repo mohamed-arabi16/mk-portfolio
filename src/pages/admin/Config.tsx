@@ -7,8 +7,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { GlassPanel } from "@/components/GlassPanel";
 import { useToast } from "@/hooks/use-toast";
 import { AdminLayout } from "@/components/admin/AdminLayout";
-import { Save } from "lucide-react";
+import { Save, Upload, Loader2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { toast as sonnerToast } from "sonner";
 
 interface PortfolioConfig {
   id: string;
@@ -48,6 +49,8 @@ export default function AdminConfig() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [formState, setFormState] = useState<Partial<PortfolioConfig>>({});
+  const [isUploading, setIsUploading] = useState(false);
+  const [heroImagePreview, setHeroImagePreview] = useState<string>('');
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -92,12 +95,71 @@ export default function AdminConfig() {
     } else {
       setConfig(data || null);
       setFormState(data || {});
+      
+      // Set preview for existing hero background
+      if (data?.hero_bg_url) {
+        const bgUrl = data.hero_bg_url.startsWith('http') || data.hero_bg_url.startsWith('/') 
+          ? data.hero_bg_url 
+          : supabase.storage.from('hero-images').getPublicUrl(data.hero_bg_url).data.publicUrl;
+        setHeroImagePreview(bgUrl);
+      }
     }
     setLoading(false);
   };
 
   const handleInputChange = (field: string, value: string) => {
     setFormState(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleHeroImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      sonnerToast.error('Please upload an image file');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      sonnerToast.error('Image size should be less than 5MB');
+      return;
+    }
+
+    setIsUploading(true);
+
+    try {
+      // Create unique filename
+      const fileExt = file.name.split('.').pop();
+      const fileName = `hero-${Date.now()}.${fileExt}`;
+
+      // Upload to storage
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('hero-images')
+        .upload(fileName, file, {
+          cacheControl: '3600',
+          upsert: false
+        });
+
+      if (uploadError) throw uploadError;
+
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('hero-images')
+        .getPublicUrl(fileName);
+
+      // Update form state with the storage path (not full URL)
+      setFormState(prev => ({ ...prev, hero_bg_url: fileName }));
+      setHeroImagePreview(publicUrl);
+
+      sonnerToast.success('Hero image uploaded successfully');
+    } catch (error) {
+      console.error('Upload error:', error);
+      sonnerToast.error('Failed to upload image');
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -274,17 +336,57 @@ export default function AdminConfig() {
                     />
                   </div>
                 </div>
-                <div>
-                  <label className="text-sm font-medium">Hero Background Image URL</label>
-                  <Input 
-                    value={formState.hero_bg_url || ''} 
-                    onChange={(e) => handleInputChange('hero_bg_url', e.target.value)}
-                    placeholder="/src/assets/hero-bg.jpg or https://..."
+              <div className="space-y-3">
+                <label className="text-sm font-medium">Hero Background Image</label>
+                
+                {/* Image Preview */}
+                {heroImagePreview && (
+                  <div className="relative w-full h-48 rounded-lg overflow-hidden border">
+                    <img 
+                      src={heroImagePreview} 
+                      alt="Hero background preview" 
+                      className="w-full h-full object-cover blur-sm"
+                    />
+                    <div className="absolute inset-0 bg-background/40 flex items-center justify-center">
+                      <p className="text-xs text-foreground">Current Background</p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Upload Button */}
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={isUploading}
+                    onClick={() => document.getElementById('hero-image-upload')?.click()}
+                    className="w-full"
+                  >
+                    {isUploading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Uploading...
+                      </>
+                    ) : (
+                      <>
+                        <Upload className="mr-2 h-4 w-4" />
+                        Upload New Background
+                      </>
+                    )}
+                  </Button>
+                  <input
+                    id="hero-image-upload"
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleHeroImageUpload}
                   />
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Enter a URL to a background image. Use /src/assets/your-image.jpg for local images.
-                  </p>
                 </div>
+                
+                <p className="text-xs text-muted-foreground">
+                  Upload a background image (max 5MB). Recommended size: 1920x1080px or larger.
+                </p>
+              </div>
               </TabsContent>
 
               <TabsContent value="about" className="space-y-4">
