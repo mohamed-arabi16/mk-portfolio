@@ -46,14 +46,29 @@ export function WorkSection() {
     : projects;
 
   return (
-    <section id="work" className="py-20 px-6 relative">
-      {/* Background Image */}
-      <div className="absolute inset-0 opacity-5">
-        <img 
-          src={projectShowcaseImg} 
-          alt="Project showcase background" 
-          className="w-full h-full object-cover"
+    <section id="work" className="py-20 px-6 relative overflow-hidden">
+      {/* Creative Animated Background */}
+      <div className="absolute inset-0">
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-accent/5 to-background" />
+        
+        {/* Animated Grid Pattern */}
+        <div 
+          className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage: `linear-gradient(to right, hsl(var(--primary)) 1px, transparent 1px),
+                             linear-gradient(to bottom, hsl(var(--primary)) 1px, transparent 1px)`,
+            backgroundSize: '60px 60px'
+          }}
         />
+        
+        {/* Floating Orbs */}
+        <div className="absolute top-20 left-20 w-72 h-72 bg-primary/10 rounded-full blur-3xl animate-pulse" 
+             style={{ animationDuration: '4s' }} />
+        <div className="absolute bottom-20 right-20 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-pulse" 
+             style={{ animationDuration: '5s', animationDelay: '1s' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-3xl animate-pulse" 
+             style={{ animationDuration: '6s', animationDelay: '2s' }} />
       </div>
       
       <div className="max-w-7xl mx-auto relative z-10">
