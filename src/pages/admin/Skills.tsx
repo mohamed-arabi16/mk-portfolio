@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { GlassPanel } from "@/components/GlassPanel";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Plus, Trash2, Edit } from "lucide-react";
+import { AdminLayout } from "@/components/admin/AdminLayout";
+import { Plus, Trash2, Edit } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -152,23 +153,19 @@ export default function AdminSkills() {
     }
   };
 
-  if (loading) return <div className="p-6">Loading...</div>;
+  if (loading) return <AdminLayout><div className="p-6">Loading...</div></AdminLayout>;
 
-  const categories = ['Technical Skills', 'Creative Skills', 'Languages'];
+  const categories = [
+    { value: 'Technical', label: 'Technical Skills' },
+    { value: 'Creative', label: 'Creative Skills' },
+    { value: 'Languages', label: 'Languages' }
+  ];
 
   return (
-    <div className="min-h-screen p-6">
+    <AdminLayout>
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-4">
-            <Button variant="outline" asChild className="btn-liquid">
-              <Link to="/admin">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back
-              </Link>
-            </Button>
-            <h1 className="text-4xl font-bold">Manage Skills</h1>
-          </div>
+          <h1 className="text-4xl font-bold">Manage Skills</h1>
 
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
@@ -188,13 +185,13 @@ export default function AdminSkills() {
                 </div>
                 <div>
                   <label className="text-sm font-medium">Category</label>
-                  <Select name="category" defaultValue={editingSkill?.category || categories[0]} required>
+                  <Select name="category" defaultValue={editingSkill?.category || categories[0].value} required>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       {categories.map(cat => (
-                        <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                        <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -212,10 +209,10 @@ export default function AdminSkills() {
         </div>
 
         {categories.map(category => (
-          <div key={category} className="mb-8">
-            <h2 className="text-2xl font-bold mb-4">{category}</h2>
+          <div key={category.value} className="mb-8">
+            <h2 className="text-2xl font-bold mb-4">{category.label}</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {skills.filter(s => s.category === category).map((skill) => (
+              {skills.filter(s => s.category === category.value).map((skill) => (
                 <GlassPanel key={skill.id} className="p-4">
                   <div className="flex justify-between items-center">
                     <div>
@@ -248,6 +245,6 @@ export default function AdminSkills() {
           </div>
         ))}
       </div>
-    </div>
+    </AdminLayout>
   );
 }

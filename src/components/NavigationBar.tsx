@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Menu, X, Moon, Sun, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -26,6 +26,18 @@ export function NavigationBar() {
   const { toast } = useToast();
   const location = useLocation();
   const navigate = useNavigate();
+
+  // Secret keyboard shortcut to access admin panel (Ctrl/Cmd + Shift + A)
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'A') {
+        e.preventDefault();
+        navigate('/admin/login');
+      }
+    };
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [navigate]);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -82,7 +94,7 @@ export function NavigationBar() {
                 >
                   {item.name}
                   <span className={cn(
-                    "absolute inset-x-0 bottom-1 h-0.5 bg-gradient-to-r from-primary to-accent transition-transform duration-300 origin-left rounded-full",
+                    "absolute left-1/2 -translate-x-1/2 bottom-1 h-0.5 w-[80%] bg-gradient-to-r from-primary to-accent transition-transform duration-300 origin-center rounded-full",
                     isActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
                   )}></span>
                 </Link>

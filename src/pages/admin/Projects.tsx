@@ -7,8 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { GlassPanel } from "@/components/GlassPanel";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Plus, Edit, Trash } from "lucide-react";
-import { Link } from "react-router-dom";
+import { AdminLayout } from "@/components/admin/AdminLayout";
+import { Plus, Edit, Trash } from "lucide-react";
 
 interface Project {
   id: string;
@@ -178,20 +178,12 @@ export default function AdminProjects() {
     });
   };
 
-  if (loading) return <div className="p-6">Loading...</div>;
+  if (loading) return <AdminLayout><div className="p-6">Loading...</div></AdminLayout>;
 
   return (
-    <div className="min-h-screen p-6">
+    <AdminLayout>
       <div className="max-w-7xl mx-auto">
-        <div className="flex items-center gap-4 mb-8">
-          <Button variant="outline" asChild className="btn-liquid">
-            <Link to="/admin">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back
-            </Link>
-          </Button>
-          <h1 className="text-4xl font-bold">Manage Projects</h1>
-        </div>
+        <h1 className="text-4xl font-bold mb-8">Manage Projects</h1>
 
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Form */}
@@ -313,6 +305,6 @@ export default function AdminProjects() {
           </div>
         </div>
       </div>
-    </div>
+    </AdminLayout>
   );
 }

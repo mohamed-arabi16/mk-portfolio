@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { GlassPanel } from "@/components/GlassPanel";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Plus, Trash2, Edit, Star } from "lucide-react";
+import { AdminLayout } from "@/components/admin/AdminLayout";
+import { Plus, Trash2, Edit, Star } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -155,21 +156,13 @@ export default function AdminTestimonials() {
     }
   };
 
-  if (loading) return <div className="p-6">Loading...</div>;
+  if (loading) return <AdminLayout><div className="p-6">Loading...</div></AdminLayout>;
 
   return (
-    <div className="min-h-screen p-6">
+    <AdminLayout>
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-4">
-            <Button variant="outline" asChild className="btn-liquid">
-              <Link to="/admin">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back
-              </Link>
-            </Button>
-            <h1 className="text-4xl font-bold">Manage Testimonials</h1>
-          </div>
+          <h1 className="text-4xl font-bold">Manage Testimonials</h1>
 
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
@@ -269,6 +262,6 @@ export default function AdminTestimonials() {
           ))}
         </div>
       </div>
-    </div>
+    </AdminLayout>
   );
 }

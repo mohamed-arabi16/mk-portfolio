@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { GlassPanel } from "@/components/GlassPanel";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Save } from "lucide-react";
+import { AdminLayout } from "@/components/admin/AdminLayout";
+import { Save } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface PortfolioConfig {
@@ -25,8 +26,6 @@ interface PortfolioConfig {
   hero_title_1_ar?: string;
   hero_title_2_en?: string;
   hero_title_2_ar?: string;
-  hero_title_3_en?: string;
-  hero_title_3_ar?: string;
   hero_subtitle_en?: string;
   hero_subtitle_ar?: string;
   global_perspective_title_en?: string;
@@ -120,8 +119,6 @@ export default function AdminConfig() {
       hero_title_1_ar: formData.get('hero_title_1_ar') as string || null,
       hero_title_2_en: formData.get('hero_title_2_en') as string || null,
       hero_title_2_ar: formData.get('hero_title_2_ar') as string || null,
-      hero_title_3_en: formData.get('hero_title_3_en') as string || null,
-      hero_title_3_ar: formData.get('hero_title_3_ar') as string || null,
       hero_subtitle_en: formData.get('hero_subtitle_en') as string || null,
       hero_subtitle_ar: formData.get('hero_subtitle_ar') as string || null,
       global_perspective_title_en: formData.get('global_perspective_title_en') as string || null,
@@ -174,20 +171,12 @@ export default function AdminConfig() {
     setSaving(false);
   };
 
-  if (loading) return <div className="p-6">Loading...</div>;
+  if (loading) return <AdminLayout><div className="p-6">Loading...</div></AdminLayout>;
 
   return (
-    <div className="min-h-screen p-6">
+    <AdminLayout>
       <div className="max-w-7xl mx-auto">
-        <div className="flex items-center gap-4 mb-8">
-          <Button variant="outline" asChild className="btn-liquid">
-            <Link to="/admin">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back
-            </Link>
-          </Button>
-          <h1 className="text-4xl font-bold">Portfolio Configuration</h1>
-        </div>
+        <h1 className="text-4xl font-bold mb-8">Portfolio Configuration</h1>
 
         <GlassPanel className="p-6">
           <form onSubmit={handleSave}>
@@ -249,16 +238,6 @@ export default function AdminConfig() {
                   <div>
                     <label className="text-sm font-medium">Hero Title 2 (Arabic)</label>
                     <Input name="hero_title_2_ar" defaultValue={config?.hero_title_2_ar || ''} />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm font-medium">Hero Title 3 (English)</label>
-                    <Input name="hero_title_3_en" defaultValue={config?.hero_title_3_en || ''} />
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium">Hero Title 3 (Arabic)</label>
-                    <Input name="hero_title_3_ar" defaultValue={config?.hero_title_3_ar || ''} />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
@@ -363,6 +342,6 @@ export default function AdminConfig() {
           </form>
         </GlassPanel>
       </div>
-    </div>
+    </AdminLayout>
   );
 }
