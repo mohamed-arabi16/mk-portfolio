@@ -60,7 +60,7 @@ export function Hero() {
     : heroImage;
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 md:pt-0 px-4 md:px-6 max-w-full">
+    <section className="relative min-h-screen flex items-center justify-center overflow-x-hidden pt-16 md:pt-0 max-w-full w-full">
       {/* Background Image */}
       <div className="absolute inset-0">
         <img 
@@ -72,52 +72,52 @@ export function Hero() {
       </div>
       
       {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 text-center w-full">
-        <div className="max-w-4xl mx-auto">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 text-center w-full overflow-x-hidden">
+        <div className="max-w-4xl mx-auto w-full">
           {/* Main Heading */}
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold font-serif mb-6 leading-tight animate-fade-in break-words">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold font-serif mb-6 leading-tight animate-fade-in break-words px-2">
             <span className="text-foreground drop-shadow-lg">
               {heroTitle1} {heroTitle2}
             </span>
             <br />
-            <span className="text-foreground/70 text-2xl md:text-3xl">{location}</span>
+            <span className="text-foreground/70 text-xl sm:text-2xl md:text-3xl">{location}</span>
           </h1>
           
           {/* Subtitle */}
-          <p className="text-xl md:text-2xl text-foreground/80 mb-8 max-w-3xl mx-auto leading-relaxed drop-shadow-md break-words px-2">
+          <p className="text-base sm:text-lg md:text-xl text-foreground/80 mb-8 max-w-3xl mx-auto leading-relaxed drop-shadow-md break-words px-4">
             {heroSubtitle}
           </p>
           
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8 px-2">
-            <Link to="/projects">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8 px-4 max-w-full">
+            <Link to="/projects" className="w-full sm:w-auto max-w-xs">
               <Button 
                 size="lg" 
-                className="btn-liquid btn-accent px-8 py-4 text-lg shadow-lg w-full sm:w-auto"
+                className="btn-liquid btn-accent px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg shadow-lg w-full"
               >
                 {t('hero.viewWork')}
-                <ChevronRight className="ml-2 h-5 w-5" />
+                <ChevronRight className="ms-2 h-4 w-4 sm:h-5 sm:w-5" />
               </Button>
             </Link>
             
-            <a href={config?.cv_url || "/MohamedKH_CV.pdf"} download>
+            <a href={config?.cv_url || "/MohamedKH_CV.pdf"} download className="w-full sm:w-auto max-w-xs">
               <Button 
                 size="lg" 
                 variant="outline"
-                className="btn-liquid px-8 py-4 text-lg shadow-lg w-full sm:w-auto"
+                className="btn-liquid px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg shadow-lg w-full"
               >
-                <Download className="mr-2 h-5 w-5" />
+                <Download className="me-2 h-4 w-4 sm:h-5 sm:w-5" />
                 {t('button.downloadCV')}
               </Button>
             </a>
           </div>
           
-          <Link to="/contact" className="text-sm text-foreground/70 hover:text-accent transition-colors block mb-16">
+          <Link to="/contact" className="text-sm text-foreground/70 hover:text-accent transition-colors block mb-16 px-4">
             {t('hero.connect')} →
           </Link>
           
           {/* Stats */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-2xl mx-auto px-2">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 max-w-2xl mx-auto px-4">
             {stats && stats.length > 0 ? (
               stats.slice(0, 3).map((stat) => (
                 <GlassPanel key={stat.id} className="hero-stat p-6 text-center animate-fade-in">

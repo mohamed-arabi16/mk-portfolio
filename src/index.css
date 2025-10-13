@@ -144,6 +144,8 @@
     font-feature-settings: "kern", "liga", "clig", "calt";
     font-variation-settings: "opsz" 32;
     letter-spacing: -0.011em; /* Apple's letter spacing */
+    overflow-x: hidden;
+    max-width: 100vw;
   }
 
   /* Apple Typography Scale */
@@ -157,6 +159,8 @@
   /* Smooth scrolling with Apple easing */
   html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
+    max-width: 100vw;
   }
   
   * {

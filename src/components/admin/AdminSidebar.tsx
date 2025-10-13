@@ -47,7 +47,7 @@ export function AdminSidebar() {
   };
 
   return (
-    <aside className="w-64 border-r border-border bg-card/50 backdrop-blur-sm flex flex-col">
+    <aside className="w-64 border-e border-border bg-card/50 backdrop-blur-sm flex flex-col fixed top-0 start-0 h-screen z-40">
       {/* Logo/Brand */}
       <div className="p-6 border-b border-border">
         <Link to="/admin" className="flex items-center gap-2">

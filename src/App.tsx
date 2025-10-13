@@ -80,6 +80,15 @@ const App = () => {
   useEffect(() => {
     // Initialize analytics
     analytics.init();
+    
+    // Prevent horizontal scroll
+    document.body.style.overflowX = 'hidden';
+    document.documentElement.style.overflowX = 'hidden';
+    
+    return () => {
+      document.body.style.overflowX = '';
+      document.documentElement.style.overflowX = '';
+    };
   }, []);
 
   return (
