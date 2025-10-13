@@ -13,6 +13,7 @@ import {
   Star,
   Languages,
   LogOut,
+  Mail,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -25,6 +26,7 @@ const menuItems = [
   { title: "Content", icon: Image, href: "/admin/content" },
   { title: "Stats", icon: BarChart3, href: "/admin/stats" },
   { title: "Testimonials", icon: Star, href: "/admin/testimonials" },
+  { title: "Contact Types", icon: Mail, href: "/admin/contact-types" },
   { title: "Translations", icon: Languages, href: "/admin/translations" },
 ];
 

@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      contact_project_types: {
+        Row: {
+          created_at: string | null
+          display_order: number | null
+          id: string
+          is_active: boolean | null
+          label_ar: string
+          label_en: string
+          updated_at: string | null
+          user_id: string
+          value: string
+        }
+        Insert: {
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          is_active?: boolean | null
+          label_ar: string
+          label_en: string
+          updated_at?: string | null
+          user_id: string
+          value: string
+        }
+        Update: {
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          is_active?: boolean | null
+          label_ar?: string
+          label_en?: string
+          updated_at?: string | null
+          user_id?: string
+          value?: string
+        }
+        Relationships: []
+      }
       content_items: {
         Row: {
           content_type: string | null

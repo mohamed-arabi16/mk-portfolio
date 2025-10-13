@@ -11,6 +11,8 @@ import { MessageSquare, Mail, Phone } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
 
 const contactFormSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -21,7 +23,20 @@ const contactFormSchema = z.object({
 
 export function ContactSection() {
   const { toast } = useToast();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  
+  const { data: projectTypes, isLoading: isLoadingTypes } = useQuery({
+    queryKey: ['contact_project_types'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('contact_project_types')
+        .select('*')
+        .eq('is_active', true)
+        .order('display_order');
+      if (error) throw error;
+      return data;
+    },
+  });
   
   const form = useForm<z.infer<typeof contactFormSchema>>({
     resolver: zodResolver(contactFormSchema),
@@ -35,21 +50,28 @@ export function ContactSection() {
 
   const onSubmit = async (values: z.infer<typeof contactFormSchema>) => {
     try {
-      // Simulate form submission - replace with actual API call
-      console.log('Form submitted:', values);
-      
-      // Show success toast
+      const { data, error } = await supabase.functions.invoke('send-contact-email', {
+        body: {
+          name: values.name,
+          email: values.email,
+          projectType: values.projectType,
+          message: values.message,
+        }
+      });
+
+      if (error) throw error;
+
       toast({
         title: t('contact.successTitle'),
         description: t('contact.successDesc'),
       });
       
-      // Reset form
       form.reset();
-    } catch (error) {
+    } catch (error: any) {
+      console.error("Error sending contact email:", error);
       toast({
         title: t('contact.errorTitle'),
-        description: t('contact.errorDesc'),
+        description: error.message || t('contact.errorDesc'),
         variant: "destructive",
       });
     }
@@ -123,19 +145,18 @@ export function ContactSection() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>{t('contact.projectType')}</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isLoadingTypes}>
                         <FormControl>
                           <SelectTrigger className="bg-background/50">
                             <SelectValue placeholder={t('contact.projectTypePlaceholder')} />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="app-mvp">{t('contact.projectAppMvp')}</SelectItem>
-                          <SelectItem value="content-growth">{t('contact.projectContentGrowth')}</SelectItem>
-                          <SelectItem value="hybrid-launch">{t('contact.projectHybridLaunch')}</SelectItem>
-                          <SelectItem value="qobouli">{t('contact.projectQobouli')}</SelectItem>
-                          <SelectItem value="consulting">{t('contact.projectConsulting')}</SelectItem>
-                          <SelectItem value="other">{t('contact.projectOther')}</SelectItem>
+                          {projectTypes?.map((type) => (
+                            <SelectItem key={type.id} value={type.value}>
+                              {language === 'ar' ? type.label_ar : type.label_en}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                       <FormMessage />

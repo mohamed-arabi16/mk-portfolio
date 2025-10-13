@@ -25,6 +25,7 @@ import AdminSkills from "./pages/admin/Skills";
 import AdminContent from "./pages/admin/Content";
 import AdminStats from "./pages/admin/Stats";
 import AdminTestimonials from "./pages/admin/Testimonials";
+import AdminContactTypes from "./pages/admin/ContactProjectTypes";
 import AdminConfig from "./pages/admin/Config";
 import AdminTranslations from "./pages/admin/Translations";
 import Portfolio from "./pages/Portfolio";
@@ -66,6 +67,7 @@ const AppContent = () => {
             <Route path="/admin/content" element={<ProtectedRoute><AdminContent /></ProtectedRoute>} />
             <Route path="/admin/stats" element={<ProtectedRoute><AdminStats /></ProtectedRoute>} />
             <Route path="/admin/testimonials" element={<ProtectedRoute><AdminTestimonials /></ProtectedRoute>} />
+            <Route path="/admin/contact-types" element={<ProtectedRoute><AdminContactTypes /></ProtectedRoute>} />
             <Route path="/admin/config" element={<ProtectedRoute><AdminConfig /></ProtectedRoute>} />
             <Route path="/admin/translations" element={<ProtectedRoute><AdminTranslations /></ProtectedRoute>} />
             
