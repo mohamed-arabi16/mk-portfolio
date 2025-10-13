@@ -7,6 +7,7 @@ import { useLanguage } from "./LanguageProvider";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
+import { useLocalizedContent } from "@/hooks/useLocalizedContent";
 import projectShowcaseImg from "@/assets/project-showcase.jpg";
 
 const formatExternalUrl = (url: string): string => {
@@ -33,6 +34,7 @@ export function WorkSection() {
   const [selectedStack, setSelectedStack] = useState<string | null>(null);
   const { t } = useLanguage();
   const { session } = useAuth();
+  const { localize } = useLocalizedContent();
   
   const { data: projects, isLoading } = useQuery({
     queryKey: ['projects_public'],
@@ -137,7 +139,7 @@ export function WorkSection() {
                   </h3>
 
                   <p className="text-muted-foreground mb-4 leading-relaxed text-sm">
-                    {project.description}
+                    {localize(project, 'description')}
                   </p>
 
                   <div className="mb-4">

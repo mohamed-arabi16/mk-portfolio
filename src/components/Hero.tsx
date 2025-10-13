@@ -60,7 +60,7 @@ export function Hero() {
     : heroImage;
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 md:pt-0">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 md:pt-0 px-4 md:px-6 max-w-full">
       {/* Background Image */}
       <div className="absolute inset-0">
         <img 
@@ -72,10 +72,10 @@ export function Hero() {
       </div>
       
       {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 text-center w-full">
         <div className="max-w-4xl mx-auto">
           {/* Main Heading */}
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold font-serif mb-6 leading-tight animate-fade-in">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold font-serif mb-6 leading-tight animate-fade-in break-words">
             <span className="text-foreground drop-shadow-lg">
               {heroTitle1} {heroTitle2}
             </span>
@@ -84,16 +84,16 @@ export function Hero() {
           </h1>
           
           {/* Subtitle */}
-          <p className="text-xl md:text-2xl text-foreground/80 mb-8 max-w-3xl mx-auto leading-relaxed drop-shadow-md">
+          <p className="text-xl md:text-2xl text-foreground/80 mb-8 max-w-3xl mx-auto leading-relaxed drop-shadow-md break-words px-2">
             {heroSubtitle}
           </p>
           
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8 px-2">
             <Link to="/projects">
               <Button 
                 size="lg" 
-                className="btn-liquid btn-accent px-8 py-4 text-lg shadow-lg"
+                className="btn-liquid btn-accent px-8 py-4 text-lg shadow-lg w-full sm:w-auto"
               >
                 {t('hero.viewWork')}
                 <ChevronRight className="ml-2 h-5 w-5" />
@@ -104,7 +104,7 @@ export function Hero() {
               <Button 
                 size="lg" 
                 variant="outline"
-                className="btn-liquid px-8 py-4 text-lg shadow-lg"
+                className="btn-liquid px-8 py-4 text-lg shadow-lg w-full sm:w-auto"
               >
                 <Download className="mr-2 h-5 w-5" />
                 {t('button.downloadCV')}
@@ -117,7 +117,7 @@ export function Hero() {
           </Link>
           
           {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-2xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-2xl mx-auto px-2">
             {stats && stats.length > 0 ? (
               stats.slice(0, 3).map((stat) => (
                 <GlassPanel key={stat.id} className="hero-stat p-6 text-center animate-fade-in">

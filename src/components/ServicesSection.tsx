@@ -51,11 +51,10 @@ export function ServicesSection() {
         {/* Section Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-6 font-serif">
-            My <span className="text-accent">Services</span>
+            {t('services.myServices').split(' ')[0]} <span className="text-accent">{t('services.myServices').split(' ').slice(1).join(' ')}</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            From building web applications to creating viral content and helping students 
-            achieve their academic dreams - I offer comprehensive digital solutions.
+            {t('services.subtitle')}
           </p>
         </div>
 
@@ -128,21 +127,19 @@ export function ServicesSection() {
 
         {/* Collaboration Notice */}
         <GlassPanel className="p-8 text-center">
-          <h3 className="text-2xl font-bold mb-4">Work With Transparency</h3>
+          <h3 className="text-2xl font-bold mb-4">{t('services.transparencyTitle')}</h3>
           <p className="text-muted-foreground max-w-2xl mx-auto mb-6">
-            I believe in ethical work practices and complete transparency. Every project 
-            includes regular updates, clear communication, and honest collaboration. 
-            I work closely with my wife on many projects, bringing diverse perspectives to every solution.
+            {t('services.transparencyDesc')}
           </p>
-          <div className="flex justify-center gap-4">
+          <div className="flex justify-center gap-4 flex-wrap">
             <Badge variant="outline" className="bg-accent/10 text-accent border-accent/20">
-              100% Transparent Process
+              {t('services.transparentProcess')}
             </Badge>
             <Badge variant="outline" className="bg-accent/10 text-accent border-accent/20">
-              Regular Updates
+              {t('services.regularUpdates')}
             </Badge>
             <Badge variant="outline" className="bg-accent/10 text-accent border-accent/20">
-              Ethical Practices
+              {t('services.ethicalPractices')}
             </Badge>
           </div>
         </GlassPanel>

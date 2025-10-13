@@ -8,12 +8,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { GlassPanel } from "@/components/GlassPanel";
 import { useToast } from "@/hooks/use-toast";
 import { AdminLayout } from "@/components/admin/AdminLayout";
-import { Plus, Edit, Trash } from "lucide-react";
+import { Plus, Edit, Trash, Upload, Loader2, Image as ImageIcon } from "lucide-react";
 
 interface Project {
   id: string;
   title: string;
-  description: string;
+  description_en: string;
+  description_ar: string;
   role: string;
   stack: string[];
   thumbnail_url: string;
@@ -26,9 +27,12 @@ export default function AdminProjects() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<Project | null>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [thumbnailPreview, setThumbnailPreview] = useState<string>('');
   const [formData, setFormData] = useState({
     title: '',
-    description: '',
+    description_en: '',
+    description_ar: '',
     role: '',
     stack: '',
     thumbnail_url: '',
@@ -83,6 +87,64 @@ export default function AdminProjects() {
     setLoading(false);
   };
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "Invalid file type",
+        description: "Please upload an image file",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate file size (5MB max)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "File too large",
+        description: "Image must be less than 5MB",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setUploadingImage(true);
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${session.user.id}/${Date.now()}.${fileExt}`;
+
+      const { error: uploadError, data } = await supabase.storage
+        .from('project-images')
+        .upload(fileName, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('project-images')
+        .getPublicUrl(fileName);
+
+      setFormData({ ...formData, thumbnail_url: publicUrl });
+      setThumbnailPreview(publicUrl);
+      
+      toast({ title: "Image uploaded successfully" });
+    } catch (error: any) {
+      toast({
+        title: "Error uploading image",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const { data: { session } } = await supabase.auth.getSession();
@@ -134,7 +196,8 @@ export default function AdminProjects() {
     setEditing(project);
     setFormData({
       title: project.title,
-      description: project.description,
+      description_en: project.description_en,
+      description_ar: project.description_ar,
       role: project.role,
       stack: project.stack.join(', '),
       thumbnail_url: project.thumbnail_url,
@@ -142,6 +205,7 @@ export default function AdminProjects() {
       is_coming_soon: project.is_coming_soon,
       display_order: project.display_order,
     });
+    setThumbnailPreview(project.thumbnail_url);
   };
 
   const handleDelete = async (id: string) => {
@@ -168,7 +232,8 @@ export default function AdminProjects() {
     setEditing(null);
     setFormData({
       title: '',
-      description: '',
+      description_en: '',
+      description_ar: '',
       role: '',
       stack: '',
       thumbnail_url: '',
@@ -176,6 +241,7 @@ export default function AdminProjects() {
       is_coming_soon: false,
       display_order: 0,
     });
+    setThumbnailPreview('');
   };
 
   if (loading) return <AdminLayout><div className="p-6">Loading...</div></AdminLayout>;
@@ -201,12 +267,24 @@ export default function AdminProjects() {
                 />
               </div>
               <div>
-                <Label>Description</Label>
+                <Label>Description (English)</Label>
                 <Textarea
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  value={formData.description_en}
+                  onChange={(e) => setFormData({ ...formData, description_en: e.target.value })}
                   required
-                  rows={4}
+                  rows={3}
+                  placeholder="Project description in English"
+                />
+              </div>
+              <div>
+                <Label>Description (Arabic)</Label>
+                <Textarea
+                  value={formData.description_ar}
+                  onChange={(e) => setFormData({ ...formData, description_ar: e.target.value })}
+                  required
+                  rows={3}
+                  placeholder="وصف المشروع بالعربية"
+                  dir="rtl"
                 />
               </div>
               <div>
@@ -227,12 +305,49 @@ export default function AdminProjects() {
                 />
               </div>
               <div>
-                <Label>Thumbnail URL</Label>
-                <Input
-                  value={formData.thumbnail_url}
-                  onChange={(e) => setFormData({ ...formData, thumbnail_url: e.target.value })}
-                  required
-                />
+                <Label>Project Thumbnail</Label>
+                <div className="space-y-4">
+                  {thumbnailPreview && (
+                    <div className="relative w-full h-48 rounded-lg overflow-hidden border border-border">
+                      <img 
+                        src={thumbnailPreview} 
+                        alt="Thumbnail preview" 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
+                  <div className="flex gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      disabled={uploadingImage}
+                      onClick={() => document.getElementById('thumbnail-upload')?.click()}
+                      className="flex-1"
+                    >
+                      {uploadingImage ? (
+                        <>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          Uploading...
+                        </>
+                      ) : (
+                        <>
+                          <Upload className="h-4 w-4 mr-2" />
+                          {thumbnailPreview ? 'Replace Image' : 'Upload Image'}
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                  <input
+                    id="thumbnail-upload"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Max 5MB. Supported: JPG, PNG, WebP
+                  </p>
+                </div>
               </div>
               <div>
                 <Label>Project URL (optional)</Label>

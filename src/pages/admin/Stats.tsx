@@ -86,8 +86,20 @@ export default function AdminStats() {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) return;
 
+    const statKey = formData.get('stat_key') as string;
+    
+    // Validate required fields
+    if (!statKey || !statKey.trim()) {
+      toast({
+        title: "Validation Error",
+        description: "Stat Key is required",
+        variant: "destructive",
+      });
+      return;
+    }
+
     const statData = {
-      stat_key: formData.get('stat_key') as string,
+      stat_key: statKey.trim(),
       label_en: formData.get('label_en') as string,
       label_ar: formData.get('label_ar') as string,
       value: formData.get('value') as string,

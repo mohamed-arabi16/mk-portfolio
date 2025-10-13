@@ -197,7 +197,8 @@ export type Database = {
       projects: {
         Row: {
           created_at: string
-          description: string | null
+          description_ar: string | null
+          description_en: string | null
           display_order: number | null
           id: string
           is_coming_soon: boolean | null
@@ -211,7 +212,8 @@ export type Database = {
         }
         Insert: {
           created_at?: string
-          description?: string | null
+          description_ar?: string | null
+          description_en?: string | null
           display_order?: number | null
           id?: string
           is_coming_soon?: boolean | null
@@ -225,7 +227,8 @@ export type Database = {
         }
         Update: {
           created_at?: string
-          description?: string | null
+          description_ar?: string | null
+          description_en?: string | null
           display_order?: number | null
           id?: string
           is_coming_soon?: boolean | null
