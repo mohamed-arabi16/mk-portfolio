@@ -2,17 +2,12 @@ import { GlassPanel } from "./GlassPanel";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "./LanguageProvider";
-import { Code, Video, GraduationCap, Calendar, ArrowRight, CheckCircle } from "lucide-react";
+import { Code, Calendar, ArrowRight } from "lucide-react";
+import * as LucideIcons from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
 import { useLocalizedContent } from "@/hooks/useLocalizedContent";
-
-const iconMap: Record<string, any> = {
-  Code,
-  Video,
-  GraduationCap,
-};
 
 export function ServicesSection() {
   const { t } = useLanguage();
@@ -66,12 +61,13 @@ export function ServicesSection() {
             </div>
           ) : services && services.length > 0 ? (
             services.map((service) => {
-              const IconComponent = iconMap[service.icon || 'Code'] || Code;
-              const features = service.features_en || [];
+              const IconComponent = (LucideIcons as any)[service.icon || 'Code'] || Code;
+              const { language } = useLanguage();
+              const features = language === 'ar' ? service.features_ar || [] : service.features_en || [];
               
               return (
                 <GlassPanel key={service.id} interactive className="p-8 group">
-                  <div className="mb-6">
+                  <div className="mb-6 text-start">
                     <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-accent/10 text-accent mb-4">
                       <IconComponent className="w-6 h-6" />
                     </div>
@@ -95,7 +91,7 @@ export function ServicesSection() {
                   </div>
 
                   {/* Pricing & Timeline */}
-                  <div className="mb-6 space-y-2">
+                  <div className="mb-6 space-y-2 text-start">
                     <div className="flex items-center gap-2 text-sm">
                       <span className="font-semibold text-accent">
                         {localize(service, 'price')}

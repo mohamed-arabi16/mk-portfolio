@@ -7,7 +7,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { GlassPanel } from "@/components/GlassPanel";
 import { useToast } from "@/hooks/use-toast";
 import { AdminLayout } from "@/components/admin/AdminLayout";
-import { Plus, Trash2, Edit } from "lucide-react";
+import { Plus, Trash2, Edit, Code } from "lucide-react";
+import * as LucideIcons from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -292,18 +293,26 @@ export default function AdminServices() {
         </div>
 
         <div className="grid gap-6">
-          {services.map((service) => (
-            <GlassPanel key={service.id} className="p-6">
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <h3 className="text-xl font-bold mb-2">{service.title_en} / {service.title_ar}</h3>
-                  <p className="text-sm text-muted-foreground mb-2">{service.description_en}</p>
-                  <div className="flex gap-4 text-sm">
-                    <span>Icon: {service.icon}</span>
-                    <span>Order: {service.display_order}</span>
-                    {service.price_en && <span>Price: {service.price_en}</span>}
+          {services.map((service) => {
+            const IconComponent = (LucideIcons as any)[service.icon] || Code;
+            
+            return (
+              <GlassPanel key={service.id} className="p-6">
+                <div className="flex justify-between items-start">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-accent/10 text-accent">
+                        <IconComponent className="w-5 h-5" />
+                      </div>
+                      <h3 className="text-xl font-bold">{service.title_en} / {service.title_ar}</h3>
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-2">{service.description_en}</p>
+                    <div className="flex gap-4 text-sm">
+                      <span>Icon: {service.icon}</span>
+                      <span>Order: {service.display_order}</span>
+                      {service.price_en && <span>Price: {service.price_en}</span>}
+                    </div>
                   </div>
-                </div>
                 <div className="flex gap-2">
                   <Button
                     variant="outline"
@@ -325,7 +334,8 @@ export default function AdminServices() {
                 </div>
               </div>
             </GlassPanel>
-          ))}
+            );
+          })}
         </div>
       </div>
     </AdminLayout>
