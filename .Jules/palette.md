@@ -1,0 +1,3 @@
+## 2024-05-24 - Required Field Indicators & Semantic Links
+**Learning:** Users often assume fields are optional unless marked otherwise, but standard HTML validation only kicks in on submit. Adding visual indicators (`*`) reduces cognitive load and submission errors. Also, using `onClick` for external links (like WhatsApp) masks them from screen readers and context menus; using semantic `<a>` tags wrapped in UI components preserves accessibility.
+**Action:** Always check form schemas for required fields and ensure they are visually marked in the UI. For external links styled as buttons, use `asChild` pattern or appropriate wrapping to ensure they remain semantic anchor tags.

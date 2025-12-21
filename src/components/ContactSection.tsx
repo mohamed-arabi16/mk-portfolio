@@ -77,11 +77,6 @@ export function ContactSection() {
     }
   };
 
-  const handleWhatsApp = () => {
-    window.open('https://wa.me/905380130948?text=Hello%20Mohamed%2C%20I%27d%20like%20to%20discuss%20a%20project%20with%20you.', '_blank');
-  };
-
-
   return (
     <section id="contact" className="py-20 px-6">
       <div className="max-w-4xl mx-auto">
@@ -107,7 +102,9 @@ export function ContactSection() {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t('contact.name')}</FormLabel>
+                      <FormLabel>
+                        {t('contact.name')} <span className="text-destructive">*</span>
+                      </FormLabel>
                       <FormControl>
                         <Input 
                           placeholder={t('contact.namePlaceholder')} 
@@ -125,7 +122,9 @@ export function ContactSection() {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t('contact.emailLabel')}</FormLabel>
+                      <FormLabel>
+                        {t('contact.emailLabel')} <span className="text-destructive">*</span>
+                      </FormLabel>
                       <FormControl>
                         <Input 
                           type="email"
@@ -144,7 +143,9 @@ export function ContactSection() {
                   name="projectType"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t('contact.projectType')}</FormLabel>
+                      <FormLabel>
+                        {t('contact.projectType')} <span className="text-destructive">*</span>
+                      </FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isLoadingTypes}>
                         <FormControl>
                           <SelectTrigger className="bg-background/50">
@@ -169,7 +170,9 @@ export function ContactSection() {
                   name="message"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t('contact.messageLabel')}</FormLabel>
+                      <FormLabel>
+                        {t('contact.messageLabel')} <span className="text-destructive">*</span>
+                      </FormLabel>
                       <FormControl>
                         <Textarea
                           placeholder={t('contact.messagePlaceholder')}
@@ -202,12 +205,18 @@ export function ContactSection() {
               
               <div className="space-y-4">
                 <Button 
-                  onClick={handleWhatsApp}
+                  asChild
                   variant="outline" 
                   className="w-full justify-start btn-liquid text-lg py-6"
                 >
-                  <MessageSquare className="w-5 h-5 mr-3" />
-                  {t('contact.whatsapp')}
+                  <a
+                    href="https://wa.me/905380130948?text=Hello%20Mohamed%2C%20I%27d%20like%20to%20discuss%20a%20project%20with%20you."
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <MessageSquare className="w-5 h-5 mr-3" />
+                    {t('contact.whatsapp')}
+                  </a>
                 </Button>
                 
                 <a 
